@@ -12,7 +12,15 @@
                     xmlns:echantillons="clr-namespace:erpWpf.Wpf.ViewModels.Echantillons"
                     xmlns:vuesechantillons="clr-namespace:erpWpf.Wpf.Views.Echantillons"
                     xmlns:factures="clr-namespace:erpWpf.Wpf.ViewModels.Factures"
-                    xmlns:vuesfactures="clr-namespace:erpWpf.Wpf.Views.Factures">
+                    xmlns:vuesfactures="clr-namespace:erpWpf.Wpf.Views.Factures"
+                    xmlns:journalAudit="clr-namespace:erpWpf.Wpf.ViewModels.JournalAudit"
+                    xmlns:vuesjournalAudit="clr-namespace:erpWpf.Wpf.Views.JournalAudit"
+                    xmlns:parametres="clr-namespace:erpWpf.Wpf.ViewModels.Parametres"
+                    xmlns:vuesparametres="clr-namespace:erpWpf.Wpf.Views.Parametres"
+                    xmlns:planning="clr-namespace:erpWpf.Wpf.ViewModels.PlanningAnalyses"
+                    xmlns:vuesplanning="clr-namespace:erpWpf.Wpf.Views.PlanningAnalyses"
+                    xmlns:utilisateurs="clr-namespace:erpWpf.Wpf.ViewModels.Utilisateurs"
+                    xmlns:vuesutilisateurs="clr-namespace:erpWpf.Wpf.Views.Utilisateurs">
 
     <DataTemplate DataType="{x:Type compte:ConnexionViewModel}">
         <vuesCompte:ConnexionVue />
@@ -54,6 +62,30 @@
 
     <DataTemplate DataType="{x:Type factures:ImpressionFactureViewModel}">
         <vuesfactures:ImpressionFactureVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type journalAudit:JournalAuditViewModel}">
+        <vuesjournalAudit:JournalAuditVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type parametres:ListeParametresViewModel}">
+        <vuesparametres:ListeParametresVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type parametres:EditionParametreViewModel}">
+        <vuesparametres:EditionParametreVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type planning:PlanningAnalysesViewModel}">
+        <vuesplanning:PlanningAnalysesVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type utilisateurs:ListeUtilisateursViewModel}">
+        <vuesutilisateurs:ListeUtilisateursVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type utilisateurs:EditionUtilisateurViewModel}">
+        <vuesutilisateurs:EditionUtilisateurVue />
     </DataTemplate>
 
 </ResourceDictionary>

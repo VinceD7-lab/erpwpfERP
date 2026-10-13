@@ -5,7 +5,11 @@ using erpWpf.Wpf.ViewModels.Clients;
 using erpWpf.Wpf.ViewModels.Documents;
 using erpWpf.Wpf.ViewModels.Echantillons;
 using erpWpf.Wpf.ViewModels.Factures;
+using erpWpf.Wpf.ViewModels.JournalAudit;
+using erpWpf.Wpf.ViewModels.Parametres;
+using erpWpf.Wpf.ViewModels.PlanningAnalyses;
 using erpWpf.Wpf.ViewModels.TableauDeBord;
+using erpWpf.Wpf.ViewModels.Utilisateurs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace erpWpf.Wpf.Hote;
@@ -45,6 +49,23 @@ public static class EnregistrementModules
         services.AjouterPage<ListeFacturesViewModel>(Destinations.Factures, Permissions.Factures.Lire);
         services.AjouterPage<ImpressionFactureViewModel>(Destinations.RouteImpressionFacture, Permissions.Factures.Lire);
         services.AjouterMenu(new EntreeMenu(50, "Factures", "factures", Destinations.Factures, Permissions.Factures.Lire));
+
+        // Planning des analyses
+        services.AjouterPage<PlanningAnalysesViewModel>(Destinations.PlanningAnalyses, Permissions.PlanningAnalyses.Lire);
+        services.AjouterMenu(new EntreeMenu(60, "Planning analyses", "planning", Destinations.PlanningAnalyses, Permissions.PlanningAnalyses.Lire));
+
+        // Administration
+        services.AjouterPage<ListeUtilisateursViewModel>(Destinations.Utilisateurs, Permissions.Utilisateurs.Lire);
+        services.AjouterPage<EditionUtilisateurViewModel>(Destinations.CreationUtilisateur, Permissions.Utilisateurs.Gerer);
+        services.AjouterPage<EditionUtilisateurViewModel>(Destinations.RouteModificationUtilisateur, Permissions.Utilisateurs.Gerer);
+        services.AjouterMenu(new EntreeMenu(100, "Utilisateurs", "utilisateurs", Destinations.Utilisateurs, Permissions.Utilisateurs.Lire, SectionAdministration));
+
+        services.AjouterPage<JournalAuditViewModel>(Destinations.JournalAudit, Permissions.JournalAudit.Lire);
+        services.AjouterMenu(new EntreeMenu(110, "Journal d'audit", "journal", Destinations.JournalAudit, Permissions.JournalAudit.Lire, SectionAdministration));
+
+        services.AjouterPage<ListeParametresViewModel>(Destinations.Parametres, Permissions.Parametres.Lire);
+        services.AjouterPage<EditionParametreViewModel>(Destinations.RouteModificationParametre, Permissions.Parametres.Modifier);
+        services.AjouterMenu(new EntreeMenu(120, "Paramètres", "parametres", Destinations.Parametres, Permissions.Parametres.Lire, SectionAdministration));
 
         return services;
     }

@@ -59,7 +59,7 @@
                 <DataGridTextColumn Header="Taille" Binding="{Binding Taille, Converter={StaticResource TailleVersKilooctets}}" SortMemberPath="Taille" Width="90" />
                 <DataGridTextColumn Header="Déposé le" Binding="{Binding DateCreation, Converter={StaticResource UtcVersLocal}}" SortMemberPath="DateCreation" Width="130" />
                 <DataGridTextColumn Header="Par" Binding="{Binding CreePar}" Width="*" />
-                <DataGridTemplateColumn Header="" Width="Auto" CanUserSort="False"
+                <DataGridTemplateColumn Header="Actions" Width="56" CanUserSort="False"
                                         Visibility="{Binding Donnees.PeutSupprimer, Source={StaticResource Ecran}, Converter={StaticResource BooleenVersVisibilite}}">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
