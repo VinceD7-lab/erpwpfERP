@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>erpWpf.Wpf</AssemblyName>
+    <RootNamespace>erpWpf.Wpf</RootNamespace>
+    <!-- Même identifiant que l'ancien projet web : le mot de passe administrateur des postes de développement est conservé. -->
+    <UserSecretsId>erpWeb-7c1f3e2a-socle</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\erpWeb.Core\erpWeb.Core.csproj" />
+    <ProjectReference Include="..\erpWeb.Infrastructure\erpWeb.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="OxyPlot.Wpf" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings*.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="erpWeb.UnitTests" />
+    <InternalsVisibleTo Include="erpWeb.IntegrationTests" />
+  </ItemGroup>
+
+</Project>

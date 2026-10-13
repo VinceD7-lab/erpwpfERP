@@ -1,0 +1,17 @@
+<UserControl x:Class="erpWpf.Wpf.Views.Compte.AccesRefuseVue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.Compte"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:AccesRefuseViewModel}">
+    <Border Style="{StaticResource Carte}" HorizontalAlignment="Left" MaxWidth="560">
+        <StackPanel>
+            <TextBlock Text="{Binding Titre}" Style="{StaticResource TexteTitre}" Margin="0,0,0,8" />
+            <TextBlock Style="{StaticResource TexteSecondaire}"
+                       Text="Vous n'avez pas la permission d'accéder à cet écran. Contactez un administrateur si vous pensez qu'il s'agit d'une erreur." />
+            <Button Content="Retour au tableau de bord" Style="{StaticResource BoutonPrincipal}" HorizontalAlignment="Left"
+                    Margin="0,16,0,0" Command="{Binding RetournerAuTableauDeBordCommand}" />
+        </StackPanel>
+    </Border>
+</UserControl>

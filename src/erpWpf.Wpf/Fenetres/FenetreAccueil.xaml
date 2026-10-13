@@ -1,0 +1,37 @@
+<Window x:Class="erpWpf.Wpf.Fenetres.FenetreAccueil"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:compte="clr-namespace:erpWpf.Wpf.ViewModels.Compte"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance compte:AccueilViewModel}"
+        Title="erpWpf — Connexion"
+        Width="460" SizeToContent="Height"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize"
+        Background="{StaticResource PinceauFond}">
+
+    <StackPanel Margin="24">
+        <TextBlock Text="erpWpf" FontSize="26" FontWeight="Bold" Foreground="{StaticResource PinceauPrimaire}"
+                   HorizontalAlignment="Center" Margin="0,0,0,16" />
+
+        <Border Background="{StaticResource PinceauFondDanger}" CornerRadius="4" Padding="10" Margin="0,0,0,12"
+                Visibility="{Binding Avertissement, Converter={StaticResource PresenceVersVisibilite}}">
+            <TextBlock Text="{Binding Avertissement}" Foreground="{StaticResource PinceauDanger}" TextWrapping="Wrap"
+                       AutomationProperties.LiveSetting="Assertive" />
+        </Border>
+
+        <Border Style="{StaticResource Carte}" Padding="24">
+            <ContentControl Content="{Binding EcranCourant}" Focusable="False" />
+        </Border>
+
+        <Button Style="{StaticResource BoutonLien}" HorizontalAlignment="Center" Margin="0,12,0,0"
+                Content="Pas encore de compte ? Créer un compte"
+                Command="{Binding AfficherInscriptionCommand}"
+                Visibility="{Binding EstConnexionAffichee, Converter={StaticResource BooleenVersVisibilite}}" />
+        <Button Style="{StaticResource BoutonLien}" HorizontalAlignment="Center" Margin="0,12,0,0"
+                Content="Déjà un compte ? Se connecter"
+                Command="{Binding AfficherConnexionCommand}"
+                Visibility="{Binding EstConnexionAffichee, Converter={StaticResource BooleenVersVisibilite}, ConverterParameter=Inverse}" />
+    </StackPanel>
+</Window>

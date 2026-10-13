@@ -1,0 +1,136 @@
+<Window x:Class="erpWpf.Wpf.Fenetres.FenetrePrincipale"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance vm:FenetrePrincipaleViewModel}"
+        Title="erpWpf" Width="1280" Height="800" MinWidth="900" MinHeight="560"
+        WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Background="{StaticResource PinceauFond}">
+
+    <Window.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding PageCourante.ChargerCommand}" />
+    </Window.InputBindings>
+
+    <DockPanel>
+        <!-- En-tête -->
+        <Border DockPanel.Dock="Top" Background="{StaticResource PinceauSurface}" BorderBrush="{StaticResource PinceauBordure}"
+                BorderThickness="0,0,0,1" Height="48">
+            <DockPanel Margin="8,0">
+                <Button DockPanel.Dock="Left" Style="{StaticResource BoutonIcone}" BorderThickness="0" Background="Transparent"
+                        Content="{Binding Source=menu, Converter={StaticResource NomIconeVersGlyphe}}"
+                        Command="{Binding BasculerMenuCommand}"
+                        ToolTip="Afficher ou masquer le menu" AutomationProperties.Name="Afficher ou masquer le menu" />
+                <TextBlock DockPanel.Dock="Left" Text="erpWpf" FontSize="17" FontWeight="Bold" Margin="8,0,0,0"
+                           Foreground="{StaticResource PinceauPrimaire}" VerticalAlignment="Center" />
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding NomUtilisateur}" VerticalAlignment="Center" Margin="0,0,12,0"
+                               Foreground="{StaticResource PinceauTexteSecondaire}" />
+                    <Button Command="{Binding DeconnecterCommand}" AutomationProperties.Name="Déconnexion">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Style="{StaticResource Icone}" Text="{Binding Source=deconnexion, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,6,0" />
+                            <TextBlock Text="Déconnexion" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <Border />
+            </DockPanel>
+        </Border>
+
+        <!-- Menu latéral (ex-barre latérale de _Layout.cshtml) -->
+        <Border DockPanel.Dock="Left" Background="{StaticResource PinceauMenu}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Width" Value="230" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding MenuReplie}" Value="True">
+                            <Setter Property="Width" Value="52" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding Menu}" Margin="0,8" AutomationProperties.Name="Menu principal">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:ElementMenuViewModel}">
+                            <Grid>
+                                <TextBlock Text="{Binding Libelle}" Foreground="#FF9AA8B8" FontSize="11" FontWeight="SemiBold"
+                                           Margin="18,14,8,4"
+                                           Visibility="{Binding EstSection, Converter={StaticResource BooleenVersVisibilite}}" />
+                                <Button Command="{Binding DataContext.NaviguerCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding Destination}"
+                                        Visibility="{Binding EstSection, Converter={StaticResource BooleenVersVisibilite}, ConverterParameter=Inverse}"
+                                        ToolTip="{Binding Libelle}" AutomationProperties.Name="{Binding Libelle}"
+                                        HorizontalContentAlignment="Left" Cursor="Hand" Foreground="White">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="Fond" Background="Transparent" Padding="18,9" Margin="4,1" CornerRadius="4">
+                                                <ContentPresenter HorizontalAlignment="Left" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="Fond" Property="Background" Value="{StaticResource PinceauMenuSurvol}" />
+                                                </Trigger>
+                                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                                    <Setter TargetName="Fond" Property="Background" Value="{StaticResource PinceauMenuSurvol}" />
+                                                </Trigger>
+                                                <DataTrigger Binding="{Binding EstActif}" Value="True">
+                                                    <Setter TargetName="Fond" Property="Background" Value="{StaticResource PinceauMenuActif}" />
+                                                </DataTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Style="{StaticResource Icone}" Text="{Binding Icone, Converter={StaticResource NomIconeVersGlyphe}}"
+                                                   Width="18" Margin="0,0,12,0" />
+                                        <TextBlock Text="{Binding Libelle}" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Contenu -->
+        <DockPanel Margin="20,16">
+            <!-- Bandeau de messages (ex-_Messages.cshtml) -->
+            <Border DockPanel.Dock="Top" CornerRadius="4" Padding="12,8" Margin="0,0,0,12"
+                    Visibility="{Binding Notifications.EstVisible, Converter={StaticResource BooleenVersVisibilite}}">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="{StaticResource PinceauFondSucces}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Notifications.EstErreur}" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PinceauFondDanger}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Style="{StaticResource BoutonIcone}" Background="Transparent" BorderThickness="0"
+                            Content="{Binding Source=fermer, Converter={StaticResource NomIconeVersGlyphe}}"
+                            Command="{Binding FermerNotificationCommand}" AutomationProperties.Name="Fermer le message" />
+                    <TextBlock Text="{Binding Notifications.Message}" TextWrapping="Wrap" VerticalAlignment="Center"
+                               AutomationProperties.LiveSetting="Polite">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{StaticResource PinceauSucces}" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Notifications.EstErreur}" Value="True">
+                                        <Setter Property="Foreground" Value="{StaticResource PinceauDanger}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </DockPanel>
+            </Border>
+
+            <ContentControl Content="{Binding PageCourante}" Focusable="False" />
+        </DockPanel>
+    </DockPanel>
+</Window>
