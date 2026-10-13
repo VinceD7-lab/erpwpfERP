@@ -26,6 +26,14 @@ public sealed class BooleenVersVisibilite : IValueConverter
         => value is Visibility.Visible ^ parameter is "Inverse";
 }
 
+/// <summary>Inverse un booléen (ex. IsReadOnly lié à une permission).</summary>
+public sealed class InverseBooleen : IValueConverter
+{
+    public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture) => value is not true;
+
+    public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture) => value is not true;
+}
+
 /// <summary>Valeur absente ou chaîne vide → Collapsed ; avec le paramètre « Inverse », l'inverse.</summary>
 public sealed class PresenceVersVisibilite : IValueConverter
 {

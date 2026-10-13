@@ -79,7 +79,7 @@ public abstract partial class GrillePagineeViewModel<TElement, TChampTri> : View
     public Task ChargerAsync() => ChargerPageAsync(NumeroPage);
 
     [RelayCommand]
-    private Task FiltrerAsync() => ChargerPageAsync(1);
+    public Task FiltrerAsync() => ChargerPageAsync(1);
 
     [RelayCommand]
     private Task ReinitialiserAsync()

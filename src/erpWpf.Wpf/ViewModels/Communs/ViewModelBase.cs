@@ -10,6 +10,7 @@ namespace erpWpf.Wpf.ViewModels.Communs;
 public abstract partial class ViewModelBase : ObservableObject, IDisposable
 {
     private readonly CancellationTokenSource _annulation = new();
+    private bool _estFerme;
 
     protected ViewModelBase()
     {
@@ -30,13 +31,21 @@ public abstract partial class ViewModelBase : ObservableObject, IDisposable
 
     public void Dispose()
     {
-        if (!_annulation.IsCancellationRequested)
+        if (_estFerme)
         {
-            _annulation.Cancel();
+            return;
         }
 
-        _annulation.Dispose();
+        _estFerme = true;
+        _annulation.Cancel();
+        SurFermeture();
+        // Source non libérée : JetonEcran reste lisible (déjà annulé) pour une opération qui se termine après la fermeture.
         GC.SuppressFinalize(this);
+    }
+
+    /// <summary>Libère les écrans enfants ou abonnements propres à l'écran.</summary>
+    protected virtual void SurFermeture()
+    {
     }
 
     protected void AfficherErreurs(IEnumerable<string> erreurs)

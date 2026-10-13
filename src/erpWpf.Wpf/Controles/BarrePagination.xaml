@@ -1,0 +1,22 @@
+<!-- Pagination des grilles côté serveur ; DataContext : un GrillePagineeViewModel. -->
+<UserControl x:Class="erpWpf.Wpf.Controles.BarrePagination"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DockPanel Margin="0,8,0,0">
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+            <TextBlock Text="Lignes par page" VerticalAlignment="Center" Margin="0,0,6,0" Style="{StaticResource TexteSecondaire}" />
+            <ComboBox ItemsSource="{Binding TaillesPage}" SelectedItem="{Binding TaillePage}" MinWidth="64" Margin="0,0,12,0"
+                      AutomationProperties.Name="Lignes par page" />
+            <Button Style="{StaticResource BoutonIcone}" Content="{Binding Source=premier, Converter={StaticResource NomIconeVersGlyphe}}"
+                    Command="{Binding PremierePageCommand}" ToolTip="Première page" AutomationProperties.Name="Première page" Margin="0,0,4,0" />
+            <Button Style="{StaticResource BoutonIcone}" Content="{Binding Source=precedent, Converter={StaticResource NomIconeVersGlyphe}}"
+                    Command="{Binding PagePrecedenteCommand}" ToolTip="Page précédente" AutomationProperties.Name="Page précédente" Margin="0,0,4,0" />
+            <Button Style="{StaticResource BoutonIcone}" Content="{Binding Source=suivant, Converter={StaticResource NomIconeVersGlyphe}}"
+                    Command="{Binding PageSuivanteCommand}" ToolTip="Page suivante" AutomationProperties.Name="Page suivante" Margin="0,0,4,0" />
+            <Button Style="{StaticResource BoutonIcone}" Content="{Binding Source=dernier, Converter={StaticResource NomIconeVersGlyphe}}"
+                    Command="{Binding DernierePageCommand}" ToolTip="Dernière page" AutomationProperties.Name="Dernière page" />
+        </StackPanel>
+        <TextBlock Text="{Binding Resume}" VerticalAlignment="Center" Style="{StaticResource TexteSecondaire}"
+                   AutomationProperties.LiveSetting="Polite" />
+    </DockPanel>
+</UserControl>

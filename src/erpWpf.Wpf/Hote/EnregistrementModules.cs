@@ -1,5 +1,7 @@
+using erpWeb.Core.Autorisation;
 using erpWeb.Core.Communs;
 using erpWpf.Wpf.Navigation;
+using erpWpf.Wpf.ViewModels.Clients;
 using erpWpf.Wpf.ViewModels.TableauDeBord;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +20,13 @@ public static class EnregistrementModules
         // Tableau de bord : accessible à tout utilisateur connecté, chaque widget porte sa propre permission.
         services.AjouterPage<TableauDeBordViewModel>(Destinations.TableauDeBord, permission: null);
         services.AjouterMenu(new EntreeMenu(10, "Tableau de bord", "tableau-de-bord", Destinations.TableauDeBord, Permission: null));
+
+        // Clients
+        services.AddTransient<EchantillonsClientViewModel>();
+        services.AjouterPage<ListeClientsViewModel>(Destinations.Clients, Permissions.Clients.Lire);
+        services.AjouterPage<EditionClientViewModel>(Destinations.CreationClient, Permissions.Clients.Gerer);
+        services.AjouterPage<EditionClientViewModel>(Destinations.RouteModificationClient, Permissions.Clients.Gerer);
+        services.AjouterMenu(new EntreeMenu(30, "Clients", "clients", Destinations.Clients, Permissions.Clients.Lire));
 
         return services;
     }

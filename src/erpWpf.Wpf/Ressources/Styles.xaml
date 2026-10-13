@@ -11,6 +11,7 @@
 
     <convertisseurs:BooleenVersVisibilite x:Key="BooleenVersVisibilite" />
     <convertisseurs:PresenceVersVisibilite x:Key="PresenceVersVisibilite" />
+    <convertisseurs:InverseBooleen x:Key="InverseBooleen" />
     <convertisseurs:NomIconeVersGlyphe x:Key="NomIconeVersGlyphe" />
     <convertisseurs:StatutVersBadge x:Key="StatutVersBadge" />
     <convertisseurs:TailleVersKilooctets x:Key="TailleVersKilooctets" />
@@ -132,6 +133,12 @@
         <Setter Property="Padding" Value="8,1" />
         <Setter Property="HorizontalAlignment" Value="Left" />
     </Style>
+    <!-- Badge de statut : contenu = valeur de statut (Emise, Recu, Creation…) -->
+    <DataTemplate x:Key="ModeleBadge">
+        <Border Style="{StaticResource Badge}" Background="{Binding Converter={StaticResource StatutVersBadge}, ConverterParameter=Couleur}">
+            <TextBlock Text="{Binding Converter={StaticResource StatutVersBadge}}" Foreground="White" FontSize="11" />
+        </Border>
+    </DataTemplate>
     <Style x:Key="BarreFiltres" TargetType="WrapPanel">
         <Setter Property="Margin" Value="0,0,0,12" />
     </Style>

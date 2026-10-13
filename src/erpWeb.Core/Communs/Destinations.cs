@@ -22,13 +22,20 @@ public static class Destinations
     public const string Parametres = "Parametres";
     public const string CreationParametre = "Parametres/Modifier";
 
-    public static string ModificationClient(int id) => $"Clients/Modifier/{id.ToString(CultureInfo.InvariantCulture)}";
+    // Routes paramétrées : le dernier segment de la destination est l'identifiant.
+    public const string RouteModificationClient = "Clients/Modifier";
+    public const string RouteTelechargementDocument = "Documents/Telecharger";
+    public const string RouteImpressionFacture = "Factures/Imprimer";
+    public const string RouteModificationUtilisateur = "Utilisateurs/Modifier";
+    public const string RouteModificationParametre = "Parametres/Modifier";
 
-    public static string TelechargementDocument(int id) => $"Documents/Telecharger/{id.ToString(CultureInfo.InvariantCulture)}";
+    public static string ModificationClient(int id) => $"{RouteModificationClient}/{id.ToString(CultureInfo.InvariantCulture)}";
 
-    public static string ImpressionFacture(int id) => $"Factures/Imprimer/{id.ToString(CultureInfo.InvariantCulture)}";
+    public static string TelechargementDocument(int id) => $"{RouteTelechargementDocument}/{id.ToString(CultureInfo.InvariantCulture)}";
 
-    public static string ModificationUtilisateur(string id) => $"Utilisateurs/Modifier/{id}";
+    public static string ImpressionFacture(int id) => $"{RouteImpressionFacture}/{id.ToString(CultureInfo.InvariantCulture)}";
 
-    public static string ModificationParametre(string cle) => $"Parametres/Modifier/{cle}";
+    public static string ModificationUtilisateur(string id) => $"{RouteModificationUtilisateur}/{id}";
+
+    public static string ModificationParametre(string cle) => $"{RouteModificationParametre}/{cle}";
 }

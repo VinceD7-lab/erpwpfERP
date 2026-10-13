@@ -4,7 +4,9 @@
                     xmlns:compte="clr-namespace:erpWpf.Wpf.ViewModels.Compte"
                     xmlns:vuesCompte="clr-namespace:erpWpf.Wpf.Views.Compte"
                     xmlns:tableauDeBord="clr-namespace:erpWpf.Wpf.ViewModels.TableauDeBord"
-                    xmlns:vuesTableauDeBord="clr-namespace:erpWpf.Wpf.Views.TableauDeBord">
+                    xmlns:vuesTableauDeBord="clr-namespace:erpWpf.Wpf.Views.TableauDeBord"
+                    xmlns:clients="clr-namespace:erpWpf.Wpf.ViewModels.Clients"
+                    xmlns:vuesclients="clr-namespace:erpWpf.Wpf.Views.Clients">
 
     <DataTemplate DataType="{x:Type compte:ConnexionViewModel}">
         <vuesCompte:ConnexionVue />
@@ -18,6 +20,14 @@
 
     <DataTemplate DataType="{x:Type tableauDeBord:TableauDeBordViewModel}">
         <vuesTableauDeBord:TableauDeBordVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type clients:ListeClientsViewModel}">
+        <vuesclients:ListeClientsVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type clients:EditionClientViewModel}">
+        <vuesclients:EditionClientVue />
     </DataTemplate>
 
 </ResourceDictionary>

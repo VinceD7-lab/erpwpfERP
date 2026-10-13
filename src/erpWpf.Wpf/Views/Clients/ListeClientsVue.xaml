@@ -1,0 +1,135 @@
+﻿<UserControl x:Class="erpWpf.Wpf.Views.Clients.ListeClientsVue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.Clients"
+             xmlns:controles="clr-namespace:erpWpf.Wpf.Controles"
+             xmlns:comportements="clr-namespace:erpWpf.Wpf.Comportements"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:ListeClientsViewModel}">
+    <UserControl.Resources>
+        <controles:ProxyLiaison x:Key="Ecran" Donnees="{Binding}" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" MinHeight="180" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <controles:EnTetePage Titre="{Binding Titre}">
+            <Button Style="{StaticResource BoutonPrincipal}" Command="{Binding CreerCommand}"
+                    Visibility="{Binding PeutGerer, Converter={StaticResource BooleenVersVisibilite}}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Icone}" Text="{Binding Source=ajouter, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,6,0" />
+                    <TextBlock Text="Nouveau client" />
+                </StackPanel>
+            </Button>
+        </controles:EnTetePage>
+
+        <DockPanel Grid.Row="1" Margin="0,0,0,8">
+            <TextBlock DockPanel.Dock="Left" Text="Rechercher" VerticalAlignment="Center" Margin="0,0,8,0" />
+            <TextBox Text="{Binding Recherche, UpdateSourceTrigger=PropertyChanged, Delay=200}" Width="320" HorizontalAlignment="Left"
+                     AutomationProperties.Name="Rechercher un client" />
+        </DockPanel>
+
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Clients}" SelectedItem="{Binding ClientSelectionne}"
+                  IsReadOnly="{Binding PeutGerer, Converter={StaticResource InverseBooleen}}"
+                  AutomationProperties.Name="Liste des clients">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Erreur, Converter={StaticResource PresenceVersVisibilite}}" Value="Visible">
+                            <Setter Property="Background" Value="{StaticResource PinceauFondDanger}" />
+                            <Setter Property="ToolTip" Value="{Binding Erreur}" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Raison sociale" Binding="{Binding RaisonSociale}" Width="2*" />
+                <DataGridTextColumn Header="CP" Binding="{Binding CodePostal}" Width="80" />
+                <DataGridTextColumn Header="Ville" Binding="{Binding Ville}" Width="*" />
+                <DataGridTextColumn Header="Pays" Binding="{Binding Pays}" Width="*" />
+                <DataGridTextColumn Header="Téléphone" Binding="{Binding Telephone1}" Width="*" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="1.5*" />
+                <DataGridTemplateColumn Header="Actions" Width="Auto" IsReadOnly="True" CanUserSort="False"
+                                        Visibility="{Binding Donnees.PeutGerer, Source={StaticResource Ecran}, Converter={StaticResource BooleenVersVisibilite}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type vm:LigneClientViewModel}">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource BoutonIcone}" Background="Transparent" BorderThickness="0" Padding="4" MinHeight="24"
+                                        Content="{Binding Source=modifier, Converter={StaticResource NomIconeVersGlyphe}}"
+                                        Command="{Binding DataContext.ModifierCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}" ToolTip="Modifier (formulaire complet)"
+                                        AutomationProperties.Name="{Binding RaisonSociale, StringFormat='Modifier {0}'}" />
+                                <Button Style="{StaticResource BoutonIcone}" Background="Transparent" BorderThickness="0" Padding="4" MinHeight="24"
+                                        Foreground="{StaticResource PinceauDanger}"
+                                        Content="{Binding Source=supprimer, Converter={StaticResource NomIconeVersGlyphe}}"
+                                        Command="{Binding DataContext.SupprimerCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                        CommandParameter="{Binding}" ToolTip="Supprimer"
+                                        AutomationProperties.Name="{Binding RaisonSociale, StringFormat='Supprimer {0}'}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Détail du client sélectionné et ses échantillons (ex-_DetailClient + îlot tableau-echantillons-client) -->
+        <Grid Grid.Row="3" Margin="0,16,0,0" Visibility="{Binding ClientSelectionne, Converter={StaticResource PresenceVersVisibilite}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="320" />
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource Carte}" DataContext="{Binding ClientSelectionne}" VerticalAlignment="Top">
+                <StackPanel>
+                    <TextBlock Text="{Binding RaisonSociale}" Style="{StaticResource TexteSousTitre}" TextWrapping="Wrap" />
+                    <TextBlock Text="Adresse" Style="{StaticResource TexteLibelle}" />
+                    <TextBlock Text="{Binding Adresse1}" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding Adresse2}" TextWrapping="Wrap" />
+                    <TextBlock TextWrapping="Wrap">
+                        <Run Text="{Binding CodePostal, Mode=OneWay}" /> <Run Text="{Binding Ville, Mode=OneWay}" />
+                    </TextBlock>
+                    <TextBlock Text="{Binding Pays}" />
+                    <TextBlock Text="Téléphone" Style="{StaticResource TexteLibelle}" />
+                    <TextBlock Text="{Binding Telephone1}" />
+                    <TextBlock Text="{Binding Telephone2}" />
+                    <TextBlock Text="Email" Style="{StaticResource TexteLibelle}" />
+                    <TextBlock Text="{Binding Email}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+            <Border Grid.Column="2" Style="{StaticResource Carte}" DataContext="{Binding Echantillons}"
+                    Visibility="{Binding Donnees.PeutVoirEchantillons, Source={StaticResource Ecran}, Converter={StaticResource BooleenVersVisibilite}}">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Top" Text="Échantillons du client" Style="{StaticResource TexteSousTitre}" />
+                    <controles:BarrePagination DockPanel.Dock="Bottom" />
+                    <DataGrid ItemsSource="{Binding Elements}" Height="240"
+                              comportements:TriServeur.Commande="{Binding TrierCommand}"
+                              comportements:TriServeur.ColonneTriee="{Binding Tri}"
+                              comportements:TriServeur.Descendant="{Binding TriDescendant}"
+                              AutomationProperties.Name="Échantillons du client">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Date de tournée" Binding="{Binding DateTournee, StringFormat=d, TargetNullValue='Sans tournée'}" SortMemberPath="DateTournee" Width="*" />
+                            <DataGridTextColumn Header="Code-barres" Binding="{Binding CodeBarresAnonyme}" SortMemberPath="CodeBarres" Width="*" />
+                            <DataGridTextColumn Header="Filière" Binding="{Binding Filiere}" SortMemberPath="Filiere" Width="*" />
+                            <DataGridTemplateColumn Header="Statut" SortMemberPath="StatutAnalyse" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ContentControl Content="{Binding StatutAnalyse}" ContentTemplate="{StaticResource ModeleBadge}" Focusable="False" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Support" Binding="{Binding TypeSupport}" CanUserSort="False" Width="*" />
+                            <DataGridTextColumn Header="T° (°C)" Binding="{Binding TemperatureReception, StringFormat=N1}" CanUserSort="False" Width="70" />
+                            <DataGridTextColumn Header="Validation" Binding="{Binding DateValidation, Converter={StaticResource UtcVersLocal}}" CanUserSort="False" Width="*" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
