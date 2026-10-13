@@ -1,0 +1,36 @@
+<UserControl x:Class="erpWpf.Wpf.Views.TableauDeBord.WidgetVue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.TableauDeBord"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:WidgetViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary Source="/erpWpf.Wpf;component/Ressources/ModelesWidgets.xaml" />
+    </UserControl.Resources>
+
+    <Border Style="{StaticResource Carte}" Margin="0,0,16,16" Padding="0" AutomationProperties.Name="{Binding Titre}">
+        <DockPanel>
+            <Border DockPanel.Dock="Top" BorderBrush="{StaticResource PinceauBordure}" BorderThickness="0,0,0,1" Padding="16,10">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Style="{StaticResource BoutonIcone}" Background="Transparent" BorderThickness="0"
+                            Content="{Binding Source=rafraichir, Converter={StaticResource NomIconeVersGlyphe}}"
+                            Command="{Binding RafraichirCommand}"
+                            ToolTip="Rafraîchir" AutomationProperties.Name="{Binding Titre, StringFormat='Rafraîchir {0}'}" />
+                    <TextBlock Style="{StaticResource Icone}" Text="{Binding Icone, Converter={StaticResource NomIconeVersGlyphe}}"
+                               Foreground="{StaticResource PinceauPrimaire}" Margin="0,0,8,0" />
+                    <TextBlock Text="{Binding Titre}" FontWeight="SemiBold" VerticalAlignment="Center"
+                               AutomationProperties.HeadingLevel="Level2" />
+                </DockPanel>
+            </Border>
+            <Grid Margin="16" MinHeight="120">
+                <TextBlock Text="{Binding Erreur}" Foreground="{StaticResource PinceauDanger}"
+                           Visibility="{Binding Erreur, Converter={StaticResource PresenceVersVisibilite}}" />
+                <ContentControl Content="{Binding Donnees}" Focusable="False"
+                                Visibility="{Binding Erreur, Converter={StaticResource PresenceVersVisibilite}, ConverterParameter=Inverse}" />
+                <ProgressBar IsIndeterminate="True" Height="3" VerticalAlignment="Top"
+                             Visibility="{Binding EstOccupe, Converter={StaticResource BooleenVersVisibilite}}" />
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>

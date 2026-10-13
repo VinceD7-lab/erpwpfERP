@@ -2,7 +2,9 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:compte="clr-namespace:erpWpf.Wpf.ViewModels.Compte"
-                    xmlns:vuesCompte="clr-namespace:erpWpf.Wpf.Views.Compte">
+                    xmlns:vuesCompte="clr-namespace:erpWpf.Wpf.Views.Compte"
+                    xmlns:tableauDeBord="clr-namespace:erpWpf.Wpf.ViewModels.TableauDeBord"
+                    xmlns:vuesTableauDeBord="clr-namespace:erpWpf.Wpf.Views.TableauDeBord">
 
     <DataTemplate DataType="{x:Type compte:ConnexionViewModel}">
         <vuesCompte:ConnexionVue />
@@ -12,6 +14,10 @@
     </DataTemplate>
     <DataTemplate DataType="{x:Type compte:AccesRefuseViewModel}">
         <vuesCompte:AccesRefuseVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type tableauDeBord:TableauDeBordViewModel}">
+        <vuesTableauDeBord:TableauDeBordVue />
     </DataTemplate>
 
 </ResourceDictionary>

@@ -13,14 +13,15 @@ public static class LiaisonMotDePasse
         "MotDePasse",
         typeof(string),
         typeof(LiaisonMotDePasse),
-        new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SurMotDePasseModifie));
+        // Valeur par défaut null : la première valeur liée (chaîne vide) déclenche le rappel, qui abonne le champ.
+        new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SurMotDePasseModifie));
 
     private static readonly DependencyProperty AbonneProperty =
         DependencyProperty.RegisterAttached("Abonne", typeof(bool), typeof(LiaisonMotDePasse));
 
-    public static string GetMotDePasse(DependencyObject element) => (string)element.GetValue(MotDePasseProperty);
+    public static string? GetMotDePasse(DependencyObject element) => (string?)element.GetValue(MotDePasseProperty);
 
-    public static void SetMotDePasse(DependencyObject element, string valeur) => element.SetValue(MotDePasseProperty, valeur);
+    public static void SetMotDePasse(DependencyObject element, string? valeur) => element.SetValue(MotDePasseProperty, valeur);
 
     private static void SurMotDePasseModifie(DependencyObject element, DependencyPropertyChangedEventArgs e)
     {
