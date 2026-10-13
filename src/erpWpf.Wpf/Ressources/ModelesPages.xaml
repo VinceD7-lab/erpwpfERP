@@ -8,7 +8,11 @@
                     xmlns:clients="clr-namespace:erpWpf.Wpf.ViewModels.Clients"
                     xmlns:vuesclients="clr-namespace:erpWpf.Wpf.Views.Clients"
                     xmlns:documents="clr-namespace:erpWpf.Wpf.ViewModels.Documents"
-                    xmlns:vuesdocuments="clr-namespace:erpWpf.Wpf.Views.Documents">
+                    xmlns:vuesdocuments="clr-namespace:erpWpf.Wpf.Views.Documents"
+                    xmlns:echantillons="clr-namespace:erpWpf.Wpf.ViewModels.Echantillons"
+                    xmlns:vuesechantillons="clr-namespace:erpWpf.Wpf.Views.Echantillons"
+                    xmlns:factures="clr-namespace:erpWpf.Wpf.ViewModels.Factures"
+                    xmlns:vuesfactures="clr-namespace:erpWpf.Wpf.Views.Factures">
 
     <DataTemplate DataType="{x:Type compte:ConnexionViewModel}">
         <vuesCompte:ConnexionVue />
@@ -38,6 +42,18 @@
 
     <DataTemplate DataType="{x:Type documents:DepotDocumentViewModel}">
         <vuesdocuments:DepotDocumentVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type echantillons:ResultatsEchantillonsViewModel}">
+        <vuesechantillons:ResultatsEchantillonsVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type factures:ListeFacturesViewModel}">
+        <vuesfactures:ListeFacturesVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type factures:ImpressionFactureViewModel}">
+        <vuesfactures:ImpressionFactureVue />
     </DataTemplate>
 
 </ResourceDictionary>

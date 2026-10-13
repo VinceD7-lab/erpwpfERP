@@ -125,7 +125,7 @@
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Header="Support" Binding="{Binding TypeSupport}" CanUserSort="False" Width="*" />
                             <DataGridTextColumn Header="T° (°C)" Binding="{Binding TemperatureReception, StringFormat=N1}" CanUserSort="False" Width="70" />
-                            <DataGridTextColumn Header="Validation" Binding="{Binding DateValidation, Converter={StaticResource UtcVersLocal}}" CanUserSort="False" Width="*" />
+                            <DataGridTextColumn Header="Validation" Binding="{Binding DateValidation, StringFormat='dd/MM/yyyy HH:mm'}" CanUserSort="False" Width="*" />
                         </DataGrid.Columns>
                     </DataGrid>
                 </DockPanel>

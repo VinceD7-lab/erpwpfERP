@@ -2,9 +2,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
-using erpWeb.Core.Audit;
-using erpWeb.Core.Echantillons;
-using erpWeb.Core.Factures;
+using erpWpf.Wpf.ViewModels.Communs;
 
 namespace erpWpf.Wpf.Ressources.Convertisseurs;
 
@@ -96,37 +94,32 @@ public sealed class NomIconeVersGlyphe : IValueConverter
         => Binding.DoNothing;
 }
 
-/// <summary>
-/// Libellé et couleur des badges de statut (factures, analyses d'échantillons, actions d'audit) :
-/// reprend les formateurs JavaScript de la version web.
-/// </summary>
+/// <summary>Badge de statut : libellé (voir LibellesStatuts) ; avec le paramètre « Couleur », pinceau de sa tonalité.</summary>
 public sealed class StatutVersBadge : IValueConverter
 {
-    private static readonly Dictionary<string, (string Libelle, string Couleur)> _statuts = new(StringComparer.Ordinal)
+    private static readonly Dictionary<TonaliteStatut, SolidColorBrush> _pinceaux = new()
     {
-        [StatutsFacture.Emise] = ("Émise", "#FF175CD3"),
-        [StatutsFacture.Payee] = ("Payée", "#FF1E7B45"),
-        [StatutsFacture.EnRetard] = ("En retard", "#FFB42318"),
-        [StatutsAnalyse.Recu] = ("Reçu", "#FF667085"),
-        [StatutsAnalyse.EnCours] = ("En cours", "#FF175CD3"),
-        [StatutsAnalyse.Termine] = ("Terminé", "#FF1E7B45"),
-        [nameof(ActionAudit.Creation)] = ("Création", "#FF1E7B45"),
-        [nameof(ActionAudit.Modification)] = ("Modification", "#FF175CD3"),
-        [nameof(ActionAudit.Suppression)] = ("Suppression", "#FFB42318"),
+        [TonaliteStatut.Neutre] = Figer(Color.FromRgb(0x66, 0x70, 0x85)),
+        [TonaliteStatut.Information] = Figer(Color.FromRgb(0x17, 0x5C, 0xD3)),
+        [TonaliteStatut.Succes] = Figer(Color.FromRgb(0x1E, 0x7B, 0x45)),
+        [TonaliteStatut.Danger] = Figer(Color.FromRgb(0xB4, 0x23, 0x18)),
     };
 
-    /// <summary>Paramètre « Couleur » : pinceau du badge ; sinon libellé.</summary>
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
-        var cle = value?.ToString() ?? string.Empty;
-        var (libelle, couleur) = _statuts.TryGetValue(cle, out var statut) ? statut : (cle, "#FF667085");
-        return parameter is "Couleur"
-            ? new SolidColorBrush((Color)ColorConverter.ConvertFromString(couleur))
-            : libelle;
+        var statut = value?.ToString();
+        return parameter is "Couleur" ? _pinceaux[LibellesStatuts.Tonalite(statut)] : LibellesStatuts.Libelle(statut);
     }
 
     public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => Binding.DoNothing;
+
+    private static SolidColorBrush Figer(Color couleur)
+    {
+        var pinceau = new SolidColorBrush(couleur);
+        pinceau.Freeze();
+        return pinceau;
+    }
 }
 
 /// <summary>Taille en octets → « 12,5 Ko ».</summary>

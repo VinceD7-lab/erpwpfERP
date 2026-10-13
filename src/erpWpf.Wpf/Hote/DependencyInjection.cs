@@ -31,6 +31,7 @@ public static class DependencyInjection
         services.AddSingleton<IServiceNotifications, ServiceNotifications>();
         services.AddSingleton<IServiceDialogues, ServiceDialogues>();
         services.AddSingleton<IServiceFichiers, ServiceFichiers>();
+        services.AddSingleton<IServiceImpression, ServiceImpression>();
         services.AddSingleton<IPreferencesLocales, PreferencesLocales>();
 
         services.AddSingleton<GestionnaireFenetres>();

@@ -3,6 +3,8 @@ using erpWeb.Core.Communs;
 using erpWpf.Wpf.Navigation;
 using erpWpf.Wpf.ViewModels.Clients;
 using erpWpf.Wpf.ViewModels.Documents;
+using erpWpf.Wpf.ViewModels.Echantillons;
+using erpWpf.Wpf.ViewModels.Factures;
 using erpWpf.Wpf.ViewModels.TableauDeBord;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,6 +36,15 @@ public static class EnregistrementModules
         services.AjouterPage<EditionClientViewModel>(Destinations.CreationClient, Permissions.Clients.Gerer);
         services.AjouterPage<EditionClientViewModel>(Destinations.RouteModificationClient, Permissions.Clients.Gerer);
         services.AjouterMenu(new EntreeMenu(30, "Clients", "clients", Destinations.Clients, Permissions.Clients.Lire));
+
+        // Échantillons
+        services.AjouterPage<ResultatsEchantillonsViewModel>(Destinations.Echantillons, Permissions.Echantillons.Lire);
+        services.AjouterMenu(new EntreeMenu(40, "Échantillons", "echantillons", Destinations.Echantillons, Permissions.Echantillons.Lire));
+
+        // Factures
+        services.AjouterPage<ListeFacturesViewModel>(Destinations.Factures, Permissions.Factures.Lire);
+        services.AjouterPage<ImpressionFactureViewModel>(Destinations.RouteImpressionFacture, Permissions.Factures.Lire);
+        services.AjouterMenu(new EntreeMenu(50, "Factures", "factures", Destinations.Factures, Permissions.Factures.Lire));
 
         return services;
     }
