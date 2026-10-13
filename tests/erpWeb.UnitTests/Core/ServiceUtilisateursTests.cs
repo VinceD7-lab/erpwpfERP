@@ -1,18 +1,10 @@
 using Bogus;
-using erpWeb.Core;
 using erpWeb.Core.Autorisation;
-using erpWeb.Core.Communs;
-using erpWeb.Core.Documents;
 using erpWeb.Core.Email;
-using erpWeb.Core.Parametres;
 using erpWeb.Core.Utilisateurs;
-using erpWeb.Infrastructure.Donnees;
 using erpWeb.UnitTests.Outils;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.Sqlite;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Time.Testing;
 using Moq;
 
 namespace erpWeb.UnitTests.Core;
@@ -25,54 +17,17 @@ public sealed class ServiceUtilisateursTests : IAsyncLifetime
 {
     private const string MotDePasseValide = "MotDePasse#2026";
 
-    private readonly SqliteConnection _connexion = new("DataSource=:memory:");
     private readonly Mock<IServiceEmail> _serviceEmail = new();
     private readonly Faker _faker = new("fr");
-    private ServiceProvider _fournisseur = default!;
-    private AsyncServiceScope _portee;
+    private HoteIdentiteTest _hote = default!;
 
-    private IServiceUtilisateurs Service => _portee.ServiceProvider.GetRequiredService<IServiceUtilisateurs>();
+    private IServiceUtilisateurs Service => _hote.Services.GetRequiredService<IServiceUtilisateurs>();
 
-    private UserManager<Utilisateur> GestionnaireUtilisateurs => _portee.ServiceProvider.GetRequiredService<UserManager<Utilisateur>>();
+    private UserManager<Utilisateur> GestionnaireUtilisateurs => _hote.GestionnaireUtilisateurs;
 
-    public async Task InitializeAsync()
-    {
-        await _connexion.OpenAsync();
+    public async Task InitializeAsync() => _hote = await HoteIdentiteTest.CreerAsync(_serviceEmail.Object);
 
-        var services = new ServiceCollection();
-        services.AddLogging();
-        services.AddDataProtection();
-        services.AddSingleton<TimeProvider>(new FakeTimeProvider(BaseDonneesTest.DateReference));
-        services.AddSingleton(Mock.Of<IUtilisateurCourant>());
-        services.AddSingleton(Mock.Of<IRechargementConfiguration>());
-        services.AddSingleton(Mock.Of<IStockageFichiers>());
-        services.AddSingleton(_serviceEmail.Object);
-        services.AddScoped<IntercepteurAudit>();
-        services.AddDbContext<AppDbContext>((fournisseur, options) => options
-            .UseSqlite(_connexion)
-            .AddInterceptors(fournisseur.GetRequiredService<IntercepteurAudit>()));
-        services.AddScoped<IAppDbContext>(fournisseur => fournisseur.GetRequiredService<AppDbContext>());
-        services.AddIdentityCore<Utilisateur>(options => options.User.RequireUniqueEmail = true)
-            .AddRoles<IdentityRole>()
-            .AddEntityFrameworkStores<AppDbContext>()
-            .AddDefaultTokenProviders();
-        services.AddCore();
-
-        _fournisseur = services.BuildServiceProvider();
-        _portee = _fournisseur.CreateAsyncScope();
-
-        await _portee.ServiceProvider.GetRequiredService<AppDbContext>().Database.EnsureCreatedAsync();
-        var gestionnaireRoles = _portee.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-        await gestionnaireRoles.CreateAsync(new IdentityRole(RolesApplication.Administrateur));
-        await gestionnaireRoles.CreateAsync(new IdentityRole(RolesApplication.Utilisateur));
-    }
-
-    public async Task DisposeAsync()
-    {
-        await _portee.DisposeAsync();
-        await _fournisseur.DisposeAsync();
-        await _connexion.DisposeAsync();
-    }
+    public async Task DisposeAsync() => await _hote.DisposeAsync();
 
     [Fact]
     public async Task CreerAsync_DonneesValides_CreeLeCompteAvecSesRolesEtEnvoieUnEmail()
