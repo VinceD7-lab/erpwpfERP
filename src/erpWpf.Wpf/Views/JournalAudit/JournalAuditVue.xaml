@@ -9,7 +9,7 @@
              mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:JournalAuditViewModel}">
     <DockPanel>
         <controles:EnTetePage DockPanel.Dock="Top" Titre="{Binding Titre}">
-            <Button Command="{Binding ExporterCommand}" Visibility="{Binding PeutExporter, Converter={StaticResource BooleenVersVisibilite}}">
+            <Button Command="{Binding ExporterCommand}" Visibility="{Binding PeutExporter, Converter={StaticResource BooleenVersVisibilite}}" AutomationProperties.Name="Exporter (Excel)">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource Icone}" Text="{Binding Source=exporter, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,6,0" />
                     <TextBlock Text="Exporter (Excel)" />

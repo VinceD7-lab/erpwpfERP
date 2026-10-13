@@ -8,7 +8,7 @@
              xmlns:comportements="clr-namespace:erpWpf.Wpf.Comportements"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:EditionUtilisateurViewModel}">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel MaxWidth="640" HorizontalAlignment="Left">
+        <StackPanel Width="640" HorizontalAlignment="Left">
             <controles:EnTetePage Titre="{Binding Titre}" />
             <ItemsControl ItemsSource="{Binding Erreurs}" Style="{StaticResource ResumeErreurs}" />
 

@@ -14,7 +14,7 @@
         <controles:EnTetePage DockPanel.Dock="Top" Titre="{Binding Titre}">
             <StackPanel Orientation="Horizontal">
                 <Button Command="{Binding RetourCommand}" Content="Retour aux factures" Margin="0,0,8,0" />
-                <Button Style="{StaticResource BoutonPrincipal}" Command="{Binding ImprimerCommand}">
+                <Button Style="{StaticResource BoutonPrincipal}" Command="{Binding ImprimerCommand}" AutomationProperties.Name="Imprimer">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource Icone}" Text="{Binding Source=imprimer, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,6,0" />
                         <TextBlock Text="Imprimer" />

@@ -31,14 +31,26 @@ public sealed class SessionUtilisateur : ISessionUtilisateur, IUtilisateurCouran
     public void Actualiser(SessionDto session)
     {
         ArgumentNullException.ThrowIfNull(session);
-        if (Session?.IdUtilisateur != session.IdUtilisateur)
+        var courante = Session;
+        if (courante?.IdUtilisateur != session.IdUtilisateur)
         {
             return;
         }
 
         Volatile.Write(ref _session, session);
-        SessionModifiee?.Invoke(this, EventArgs.Empty);
+
+        // Relue chaque minute : on ne notifie (reconstruction du menu) que si quelque chose a changé.
+        if (!Equivalentes(courante, session))
+        {
+            SessionModifiee?.Invoke(this, EventArgs.Empty);
+        }
     }
+
+    private static bool Equivalentes(SessionDto avant, SessionDto apres)
+        => avant.NomComplet == apres.NomComplet
+            && avant.Email == apres.Email
+            && avant.TamponSecurite == apres.TamponSecurite
+            && avant.Permissions.SetEquals(apres.Permissions);
 
     public void Fermer()
     {

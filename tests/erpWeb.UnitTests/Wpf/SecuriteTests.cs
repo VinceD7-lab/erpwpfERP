@@ -61,6 +61,20 @@ public sealed class SecuriteTests
     }
 
     [Fact]
+    public void Actualiser_SessionInchangee_NeNotifiePas()
+    {
+        var session = new SessionUtilisateur();
+        session.Ouvrir(_session);
+        var notifications = 0;
+        session.SessionModifiee += (_, _) => notifications++;
+
+        session.Actualiser(_session with { Permissions = new HashSet<string>(_session.Permissions) });
+        session.Actualiser(_session with { Permissions = new HashSet<string> { Permissions.Clients.Gerer } });
+
+        Assert.Equal(1, notifications);
+    }
+
+    [Fact]
     public void Fermer_SessionOuverte_NotifieUneSeuleFois()
     {
         var session = new SessionUtilisateur();

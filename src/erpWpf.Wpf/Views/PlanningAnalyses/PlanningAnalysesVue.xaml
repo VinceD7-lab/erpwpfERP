@@ -17,7 +17,7 @@
                 <Button Style="{StaticResource BoutonIcone}" Content="{Binding Source=suivant, Converter={StaticResource NomIconeVersGlyphe}}"
                         Command="{Binding MoisSuivantCommand}" ToolTip="Mois suivant" AutomationProperties.Name="Mois suivant" Margin="0,0,16,0" />
                 <Button Style="{StaticResource BoutonPrincipal}" Command="{Binding SauvegarderCommand}"
-                        Visibility="{Binding PeutGerer, Converter={StaticResource BooleenVersVisibilite}}">
+                        Visibility="{Binding PeutGerer, Converter={StaticResource BooleenVersVisibilite}}" AutomationProperties.Name="Sauvegarder">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Style="{StaticResource Icone}" Text="{Binding Source=enregistrer, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,6,0" />
                         <TextBlock Text="Sauvegarder" />

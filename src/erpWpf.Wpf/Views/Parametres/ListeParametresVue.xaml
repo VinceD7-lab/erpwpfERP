@@ -12,7 +12,7 @@
     <DockPanel>
         <controles:EnTetePage DockPanel.Dock="Top" Titre="{Binding Titre}">
             <Button Style="{StaticResource BoutonPrincipal}" Command="{Binding CreerCommand}"
-                    Visibility="{Binding PeutModifier, Converter={StaticResource BooleenVersVisibilite}}">
+                    Visibility="{Binding PeutModifier, Converter={StaticResource BooleenVersVisibilite}}" AutomationProperties.Name="Nouveau paramètre">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Style="{StaticResource Icone}" Text="{Binding Source=ajouter, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,6,0" />
                     <TextBlock Text="Nouveau paramètre" />

@@ -93,7 +93,8 @@ Server=SRV-SQL,1433;Database=erpWeb;User ID=erp_application;Password=<secret>;En
 
 3. **Poste** : copier `artefacts\erpWpf` (par exemple dans `C:\Program Files\erpWpf`), renseigner `appsettings.Production.json` (chaîne de connexion, `Stockage:Dossier`), créer un raccourci vers `erpWpf.Wpf.exe`. La publication est autonome : aucun runtime .NET n'est requis. L'environnement est `Production` par défaut (`DOTNET_ENVIRONMENT` pour en changer).
 4. **Documents** : un seul poste → `C:\ProgramData\erpWpf\documents` (droits d'écriture pour les utilisateurs) ; plusieurs postes → partage réseau UNC commun (`\\SRV-FICHIERS\erpWpf\documents`).
-5. **Premier lancement** : fournir `Administrateur:MotDePasse` une fois (variable d'environnement `Administrateur__MotDePasse`) pour créer le compte administrateur, puis la retirer.
+5. **Reprise d'une installation erpWeb** : la base est reprise telle quelle (même schéma, mêmes migrations, comptes et mots de passe conservés). Les chemins des documents étant enregistrés relativement au dossier de stockage, copier l'arborescence `App_Data/documents` de l'ancien site vers le nouveau `Stockage:Dossier`.
+6. **Premier lancement** : fournir `Administrateur:MotDePasse` une fois (variable d'environnement `Administrateur__MotDePasse`) pour créer le compte administrateur, puis la retirer.
 
 Les erreurs non gérées affichent un identifiant et sont consignées dans le journal d'événements Windows (journal « Application », source « .NET Runtime »).
 

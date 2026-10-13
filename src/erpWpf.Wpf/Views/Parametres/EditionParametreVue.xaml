@@ -6,7 +6,7 @@
              xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.Parametres"
              xmlns:controles="clr-namespace:erpWpf.Wpf.Controles"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:EditionParametreViewModel}">
-    <StackPanel MaxWidth="640" HorizontalAlignment="Left">
+    <StackPanel Width="640" HorizontalAlignment="Left">
         <controles:EnTetePage Titre="{Binding Titre}" />
         <Border Style="{StaticResource Carte}">
             <StackPanel>
