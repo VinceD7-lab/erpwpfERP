@@ -1,12 +1,12 @@
 <#
-Arrete l'application erpWeb.Web demarree via demarrer-application.ps1.
+Arrete l'application erpWpf.Wpf demarree via demarrer-application.ps1 (ou lancee depuis src/erpWpf.Wpf/bin).
 #>
 
 $ErrorActionPreference = "Stop"
 
 $racineDepot = $PSScriptRoot
-$fichierPid = Join-Path $racineDepot ".erpweb-app.pid"
-$dossierBinaires = Join-Path $racineDepot "src\erpWeb.Web\bin"
+$fichierPid = Join-Path $racineDepot ".erpwpf-app.pid"
+$dossierBinaires = Join-Path $racineDepot "src\erpWpf.Wpf\bin"
 
 $identifiantsAArreter = @()
 
@@ -18,17 +18,17 @@ if (Test-Path $fichierPid) {
     Remove-Item $fichierPid -Force
 }
 
-# "dotnet run" demarre erpWeb.Web.exe comme processus descendant ; selon la profondeur de
+# "dotnet run" demarre erpWpf.Wpf.exe comme processus descendant ; selon la profondeur de
 # l'arbre, "taskkill /T" ne le retrouve pas toujours (reparentage Windows). On le recherche
 # donc aussi directement par son chemin d'execution.
-$identifiantsAArreter += Get-CimInstance Win32_Process -Filter "Name = 'erpWeb.Web.exe'" |
+$identifiantsAArreter += Get-CimInstance Win32_Process -Filter "Name = 'erpWpf.Wpf.exe'" |
     Where-Object { $_.ExecutablePath -like "$dossierBinaires*" } |
     Select-Object -ExpandProperty ProcessId
 
 $identifiantsAArreter = $identifiantsAArreter | Select-Object -Unique
 
 if (-not $identifiantsAArreter) {
-    Write-Host "Aucune application erpWeb en cours."
+    Write-Host "Aucune application erpWpf en cours."
     exit 0
 }
 
@@ -38,8 +38,8 @@ foreach ($identifiant in $identifiantsAArreter) {
         continue
     }
 
-    Write-Host "Arret de erpWeb (PID $identifiant)..."
+    Write-Host "Arret de erpWpf (PID $identifiant)..."
     taskkill /PID $identifiant /T /F | Out-Null
 }
 
-Write-Host "erpWeb arrete."
+Write-Host "erpWpf arrete."
