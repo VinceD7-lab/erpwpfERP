@@ -66,9 +66,12 @@ public sealed class ServiceNavigation : IServiceNavigation
 
         var viewModel = (ViewModelBase)_fabrique.Creer(page.TypeViewModel);
         Afficher(route, viewModel);
+
+        // Le jeton de l'appelant est souvent celui de la page qui vient d'être fermée (donc annulé) :
+        // la nouvelle page s'initialise avec son propre jeton, annulé à sa fermeture.
         if (viewModel is INavigable navigable)
         {
-            await navigable.InitialiserAsync(parametre, jetonAnnulation);
+            await navigable.InitialiserAsync(parametre, viewModel.JetonFermeture);
         }
 
         return true;

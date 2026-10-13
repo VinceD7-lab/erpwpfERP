@@ -41,12 +41,15 @@ public static class TriServeur
         }
 
         grille.Sorting -= SurTri;
+        grille.Loaded -= SurChargement;
         if (e.NewValue is not null)
         {
             grille.Sorting += SurTri;
-            grille.Loaded += (_, _) => AfficherIndicateur(grille);
+            grille.Loaded += SurChargement;
         }
     }
+
+    private static void SurChargement(object sender, RoutedEventArgs e) => AfficherIndicateur((DataGrid)sender);
 
     private static void SurTri(object sender, DataGridSortingEventArgs e)
     {

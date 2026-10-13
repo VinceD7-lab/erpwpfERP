@@ -17,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace erpWeb.Infrastructure;
 
-/// <summary>Composition root de la couche Infrastructure, appelée uniquement depuis Program.cs.</summary>
+/// <summary>Composition root de la couche Infrastructure, appelée uniquement depuis la composition root de la présentation (erpWpf.Wpf/Hote/ConstructionHote).</summary>
 public static class DependencyInjection
 {
     public const string NomChaineConnexion = "ParDefaut";

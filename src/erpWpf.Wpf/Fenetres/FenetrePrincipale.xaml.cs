@@ -14,5 +14,5 @@ public partial class FenetrePrincipale : Window
         DataContext = viewModel;
     }
 
-    public Task DemarrerAsync() => _viewModel.DemarrerAsync();
+    public void Demarrer() => _viewModel.Demarrer();
 }

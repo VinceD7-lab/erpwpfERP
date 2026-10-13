@@ -76,6 +76,12 @@ public sealed class SurveillanceSession : IDisposable
                 (service, jeton) => service.ActualiserSessionAsync(session.IdUtilisateur, session.TamponSecurite, jeton),
                 jetonAnnulation);
 
+            if (!ReferenceEquals(_session.Session, session))
+            {
+                // Session fermée ou remplacée pendant la vérification : résultat sans objet.
+                return;
+            }
+
             if (actualisee is null)
             {
                 _session.Fermer();

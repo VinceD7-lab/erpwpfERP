@@ -29,6 +29,9 @@ public abstract partial class ViewModelBase : ObservableObject, IDisposable
 
     protected CancellationToken JetonEcran => _annulation.Token;
 
+    /// <summary>Jeton annulé à la fermeture de l'écran, transmis par la navigation à <see cref="INavigable.InitialiserAsync"/>.</summary>
+    public CancellationToken JetonFermeture => _annulation.Token;
+
     public void Dispose()
     {
         if (_estFerme)

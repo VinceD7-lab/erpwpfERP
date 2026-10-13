@@ -2,6 +2,7 @@ using System.Windows;
 using erpWpf.Wpf.Fenetres;
 using erpWpf.Wpf.Navigation;
 using erpWpf.Wpf.Securite;
+using erpWpf.Wpf.ViewModels;
 using erpWpf.Wpf.ViewModels.Compte;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -71,7 +72,12 @@ public sealed class GestionnaireFenetres : IDisposable
 
     private void AfficherAccueil()
     {
-        _accueil = _services.GetRequiredService<FenetreAccueil>();
+        // Créées hors du suivi du conteneur racine (libérées à la fermeture de la fenêtre, voir FabriqueViewModels).
+        var accueil = ActivatorUtilities.CreateInstance<AccueilViewModel>(
+            _services,
+            ActivatorUtilities.CreateInstance<ConnexionViewModel>(_services),
+            ActivatorUtilities.CreateInstance<InscriptionViewModel>(_services));
+        _accueil = ActivatorUtilities.CreateInstance<FenetreAccueil>(_services, accueil);
         _accueil.Closed += SurFenetreFermee;
         Application.Current.MainWindow = _accueil;
         _accueil.Show();
@@ -79,12 +85,14 @@ public sealed class GestionnaireFenetres : IDisposable
 
     private void AfficherPrincipale()
     {
-        _principale = _services.GetRequiredService<FenetrePrincipale>();
+        _principale = ActivatorUtilities.CreateInstance<FenetrePrincipale>(
+            _services,
+            ActivatorUtilities.CreateInstance<FenetrePrincipaleViewModel>(_services));
         _principale.Closed += SurFenetreFermee;
         Application.Current.MainWindow = _principale;
         _principale.Show();
         _surveillance.Demarrer();
-        _ = _principale.DemarrerAsync();
+        _principale.Demarrer();
 
         if (_accueil is not null)
         {

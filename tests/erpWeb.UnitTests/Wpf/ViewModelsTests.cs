@@ -190,6 +190,24 @@ public sealed class ViewModelsTests
     }
 
     [Fact]
+    public async Task LigneClient_SansPermissionDeGestion_NEnregistreRienEtRestaureLaLigne()
+    {
+        var service = new Mock<IServiceClients>();
+        service.Setup(s => s.ListerAsync(It.IsAny<CancellationToken>())).ReturnsAsync([new ClientDto { Id = 4, RaisonSociale = "Acier SA" }]);
+        service.Setup(s => s.ObtenirAsync(4, It.IsAny<CancellationToken>())).ReturnsAsync(new ClientDto { Id = 4, RaisonSociale = "Acier SA" });
+        using var liste = CreerListeClients(service.Object, peutGerer: false);
+        await liste.InitialiserAsync(null, CancellationToken.None);
+        var ligne = liste.Clients.Single();
+
+        ligne.BeginEdit();
+        ligne.RaisonSociale = "Modifié sans droit";
+        ligne.EndEdit();
+
+        service.Verify(s => s.ModifierAsync(It.IsAny<ModificationClientDto>(), It.IsAny<CancellationToken>()), Times.Never);
+        Assert.Equal("Acier SA", ligne.RaisonSociale);
+    }
+
+    [Fact]
     public async Task LigneClient_EditionAnnulee_RestaureLesValeursSansEnregistrer()
     {
         var service = new Mock<IServiceClients>();
@@ -280,18 +298,18 @@ public sealed class ViewModelsTests
         Assert.False(planning.PeutQuitter());
     }
 
-    private static ListeClientsViewModel CreerListeClients(IServiceClients service)
+    private static ListeClientsViewModel CreerListeClients(IServiceClients service, bool peutGerer = true)
     {
         var autorisation = new Mock<IAutorisation>();
-        autorisation.Setup(a => a.APermission(It.IsAny<string?>())).Returns<string?>(permission => permission != Permissions.Echantillons.Lire);
+        autorisation.Setup(a => a.APermission(It.IsAny<string?>()))
+            .Returns<string?>(permission => permission != Permissions.Echantillons.Lire && (peutGerer || permission != Permissions.Clients.Gerer));
         var executeur = new ExecuteurOperationsTest().Ajouter(service);
         return new ListeClientsViewModel(
             executeur,
             Mock.Of<IServiceNavigation>(),
             Mock.Of<IServiceDialogues>(),
             Mock.Of<IServiceNotifications>(),
-            autorisation.Object,
-            new EchantillonsClientViewModel(executeur));
+            autorisation.Object);
     }
 
     private static PlanningAnalysesViewModel CreerPlanning(IServicePlanningAnalyses service, bool peutGerer, IServiceDialogues? dialogues = null)

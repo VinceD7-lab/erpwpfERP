@@ -72,7 +72,8 @@ public sealed partial class FenetrePrincipaleViewModel : ObservableObject, IDisp
     [ObservableProperty]
     public partial bool MenuReplie { get; set; }
 
-    public Task DemarrerAsync() => _navigation.NaviguerAsync(Destinations.TableauDeBord);
+    /// <summary>Ouvre le tableau de bord par la commande : une erreur atteint le gestionnaire global.</summary>
+    public void Demarrer() => NaviguerCommand.Execute(Destinations.TableauDeBord);
 
     [RelayCommand]
     private Task NaviguerAsync(string? destination)

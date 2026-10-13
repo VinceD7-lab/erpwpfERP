@@ -100,6 +100,22 @@ public sealed class ServiceNavigationTests
     }
 
     [Fact]
+    public async Task NaviguerAsync_DepuisUnePageAvecSonJeton_InitialiseLaNouvellePageAvecUnJetonActif()
+    {
+        var navigation = CreerNavigation();
+        await navigation.NaviguerAsync("Module");
+        var suivante = new PageTest();
+        _fabriques[typeof(PageTest)] = () => suivante;
+
+        // Comme un bouton « Retour » : la page courante navigue avec son propre jeton, annulé dès qu'elle est fermée.
+        await navigation.NaviguerAsync("Module/Modifier/3", _page.JetonFermeture);
+
+        Assert.True(_page.JetonFermeture.IsCancellationRequested);
+        Assert.False(suivante.JetonInitialisation.IsCancellationRequested);
+        Assert.Equal(suivante.JetonFermeture, suivante.JetonInitialisation);
+    }
+
+    [Fact]
     public async Task NaviguerAsync_NouvellePage_FermeLaPrecedente()
     {
         var navigation = CreerNavigation();
@@ -131,9 +147,12 @@ public sealed class ServiceNavigationTests
 
         public bool EstFermee { get; private set; }
 
+        public CancellationToken JetonInitialisation { get; private set; }
+
         public Task InitialiserAsync(string? parametre, CancellationToken jetonAnnulation)
         {
             Parametre = parametre;
+            JetonInitialisation = jetonAnnulation;
             return Task.CompletedTask;
         }
 

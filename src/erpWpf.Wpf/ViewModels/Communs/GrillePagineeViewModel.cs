@@ -120,7 +120,7 @@ public abstract partial class GrillePagineeViewModel<TElement, TChampTri> : View
     {
         if (NombreTotal > 0)
         {
-            _ = ChargerPageAsync(1);
+            FiltrerCommand.Execute(null);
         }
     }
 

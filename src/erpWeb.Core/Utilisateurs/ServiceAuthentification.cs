@@ -26,6 +26,7 @@ public sealed class ServiceAuthentification : IServiceAuthentification
             return ResultatOperation<SessionDto>.Echec(MessageIdentifiantsIncorrects);
         }
 
+        jetonAnnulation.ThrowIfCancellationRequested();
         var utilisateur = await _gestionnaireUtilisateurs.FindByEmailAsync(email.Trim());
         if (utilisateur is null)
         {
@@ -57,6 +58,7 @@ public sealed class ServiceAuthentification : IServiceAuthentification
 
     public async Task<SessionDto?> ActualiserSessionAsync(string idUtilisateur, string tamponSecurite, CancellationToken jetonAnnulation = default)
     {
+        jetonAnnulation.ThrowIfCancellationRequested();
         var utilisateur = await _gestionnaireUtilisateurs.FindByIdAsync(idUtilisateur);
         if (utilisateur is null
             || !utilisateur.EstActif

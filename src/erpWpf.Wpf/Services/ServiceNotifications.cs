@@ -8,6 +8,7 @@ public sealed partial class ServiceNotifications : ObservableObject, IServiceNot
 
     private readonly TimeProvider _horloge;
     private ITimer? _minuterie;
+    private int _version;
 
     public ServiceNotifications(TimeProvider horloge)
     {
@@ -25,26 +26,41 @@ public sealed partial class ServiceNotifications : ObservableObject, IServiceNot
 
     public void Succes(string message)
     {
-        Afficher(message, estErreur: false);
-        _minuterie = _horloge.CreateTimer(_ => Masquer(), null, DureeAffichageSucces, Timeout.InfiniteTimeSpan);
+        var version = Afficher(message, estErreur: false);
+
+        // Le rappel s'exécute sur le pool de threads : il ne masque que le message pour lequel il a été armé.
+        _minuterie = _horloge.CreateTimer(
+            _ =>
+            {
+                if (Volatile.Read(ref _version) == version)
+                {
+                    EstVisible = false;
+                }
+            },
+            null,
+            DureeAffichageSucces,
+            Timeout.InfiniteTimeSpan);
     }
 
-    public void Erreur(string message) => Afficher(message, estErreur: true);
+    public void Erreur(string message) => _ = Afficher(message, estErreur: true);
 
     public void Masquer()
     {
         ArreterMinuterie();
+        Interlocked.Increment(ref _version);
         EstVisible = false;
     }
 
     public void Dispose() => ArreterMinuterie();
 
-    private void Afficher(string message, bool estErreur)
+    private int Afficher(string message, bool estErreur)
     {
         ArreterMinuterie();
+        var version = Interlocked.Increment(ref _version);
         Message = message;
         EstErreur = estErreur;
         EstVisible = true;
+        return version;
     }
 
     private void ArreterMinuterie()

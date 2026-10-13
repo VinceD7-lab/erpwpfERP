@@ -119,6 +119,24 @@ public sealed class FacturesTests : IClassFixture<HoteApplication>
     }
 
     [Fact]
+    public async Task Impression_Retour_RechargeLaListeDesFactures()
+    {
+        var code = await AjouterEchantillonValideAsync();
+        await _hote.ConnecterAdministrateurAsync();
+        var liste = await OuvrirListeAsync();
+        await liste.GenererCommand.ExecuteAsync(null);
+        var navigation = _hote.Obtenir<IServiceNavigation>();
+        await navigation.NaviguerAsync(Destinations.ImpressionFacture(liste.Elements.Single(element => element.CodeBarresAnonyme == code).IdFacture));
+        var apercu = Assert.IsType<ImpressionFactureViewModel>(navigation.PageCourante);
+
+        await apercu.RetourCommand.ExecuteAsync(null);
+
+        var retour = Assert.IsType<ListeFacturesViewModel>(navigation.PageCourante);
+        Assert.NotEmpty(retour.Elements);
+        Assert.NotEmpty(retour.Clients);
+    }
+
+    [Fact]
     public async Task Impression_FactureInconnue_RevientALaListeAvecUnMessage()
     {
         await _hote.ConnecterAdministrateurAsync();
@@ -126,8 +144,9 @@ public sealed class FacturesTests : IClassFixture<HoteApplication>
 
         await navigation.NaviguerAsync(Destinations.ImpressionFacture(int.MaxValue));
 
-        Assert.IsType<ListeFacturesViewModel>(navigation.PageCourante);
+        var liste = Assert.IsType<ListeFacturesViewModel>(navigation.PageCourante);
         Assert.True(_hote.Obtenir<IServiceNotifications>().EstErreur);
+        Assert.NotEmpty(liste.Clients);
     }
 
     private async Task<ListeFacturesViewModel> OuvrirListeAsync()

@@ -28,8 +28,7 @@ public sealed partial class ListeClientsViewModel : ViewModelBase, INavigable
         IServiceNavigation navigation,
         IServiceDialogues dialogues,
         IServiceNotifications notifications,
-        IAutorisation autorisation,
-        EchantillonsClientViewModel echantillons)
+        IAutorisation autorisation)
     {
         _executeur = executeur;
         _navigation = navigation;
@@ -37,7 +36,7 @@ public sealed partial class ListeClientsViewModel : ViewModelBase, INavigable
         _notifications = notifications;
         PeutGerer = autorisation.APermission(Permissions.Clients.Gerer);
         PeutVoirEchantillons = autorisation.APermission(Permissions.Echantillons.Lire);
-        Echantillons = echantillons;
+        Echantillons = new EchantillonsClientViewModel(executeur);
     }
 
     public override string Titre => "Clients";
@@ -110,7 +109,7 @@ public sealed partial class ListeClientsViewModel : ViewModelBase, INavigable
     {
         if (PeutVoirEchantillons)
         {
-            _ = Echantillons.AfficherClientAsync(value?.Id);
+            Echantillons.SelectionnerClient(value?.Id);
         }
     }
 
@@ -136,6 +135,13 @@ public sealed partial class ListeClientsViewModel : ViewModelBase, INavigable
     {
         try
         {
+            if (!PeutGerer)
+            {
+                await RelireLigneAsync(ligne);
+                _notifications.Erreur("Vous n'avez pas la permission de modifier les clients.");
+                return;
+            }
+
             var modification = ligne.VersModification(ligne.Id);
             var resultat = await _executeur.ExecuterAsync<IServiceClients, ResultatOperation>(
                 (service, jeton) => service.ModifierAsync(modification, jeton),
@@ -148,14 +154,7 @@ public sealed partial class ListeClientsViewModel : ViewModelBase, INavigable
             }
 
             // Relecture : le service normalise certaines valeurs (téléphones).
-            var client = await _executeur.ExecuterAsync<IServiceClients, ClientDto?>(
-                (service, jeton) => service.ObtenirAsync(ligne.Id, jeton),
-                JetonEcran);
-            if (client is not null)
-            {
-                ligne.Actualiser(client);
-            }
-
+            await RelireLigneAsync(ligne);
             _notifications.Succes($"Les modifications de « {ligne.RaisonSociale} » ont été enregistrées.");
         }
         catch (OperationCanceledException)
@@ -166,6 +165,17 @@ public sealed partial class ListeClientsViewModel : ViewModelBase, INavigable
         {
             ligne.Erreur = "Enregistrement impossible.";
             _notifications.Erreur($"« {ligne.RaisonSociale} » n'a pas pu être enregistré.");
+        }
+    }
+
+    private async Task RelireLigneAsync(LigneClientViewModel ligne)
+    {
+        var client = await _executeur.ExecuterAsync<IServiceClients, ClientDto?>(
+            (service, jeton) => service.ObtenirAsync(ligne.Id, jeton),
+            JetonEcran);
+        if (client is not null)
+        {
+            ligne.Actualiser(client);
         }
     }
 

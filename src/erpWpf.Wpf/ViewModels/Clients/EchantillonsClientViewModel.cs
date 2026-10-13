@@ -29,6 +29,13 @@ public sealed class EchantillonsClientViewModel : GrillePagineeViewModel<Resulta
         return FiltrerAsync();
     }
 
+    /// <summary>Sélection depuis la liste : passe par la commande, dont les erreurs atteignent le gestionnaire global.</summary>
+    public void SelectionnerClient(int? idClient)
+    {
+        IdClient = idClient;
+        FiltrerCommand.Execute(null);
+    }
+
     public override Task InitialiserAsync(string? parametre, CancellationToken jetonAnnulation) => Task.CompletedTask;
 
     protected override Task<ResultatPagine<ResultatEchantillonDto>> RechercherAsync(

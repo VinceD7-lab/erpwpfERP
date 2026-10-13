@@ -33,4 +33,10 @@ public sealed partial class AccueilViewModel : ViewModelBase
 
     [RelayCommand]
     private void AfficherConnexion() => EcranCourant = Connexion;
+
+    protected override void SurFermeture()
+    {
+        Connexion.Dispose();
+        Inscription.Dispose();
+    }
 }

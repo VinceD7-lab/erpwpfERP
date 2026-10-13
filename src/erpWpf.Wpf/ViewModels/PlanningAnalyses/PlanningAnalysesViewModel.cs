@@ -87,6 +87,7 @@ public sealed partial class PlanningAnalysesViewModel : ViewModelBase, INavigabl
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(LibelleMois))]
+    [NotifyCanExecuteChangedFor(nameof(MoisPrecedentCommand), nameof(MoisSuivantCommand))]
     public partial int Mois { get; private set; }
 
     [ObservableProperty]
@@ -102,10 +103,10 @@ public sealed partial class PlanningAnalysesViewModel : ViewModelBase, INavigabl
 
     public bool PeutQuitter() => !EstModifie || _dialogues.Confirmer(MessageModificationsPerdues);
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(EstCharge))]
     private Task MoisPrecedentAsync() => ChangerDeMoisAsync(-1);
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(EstCharge))]
     private Task MoisSuivantAsync() => ChangerDeMoisAsync(1);
 
     [RelayCommand(CanExecute = nameof(PeutSauvegarder))]
@@ -137,6 +138,8 @@ public sealed partial class PlanningAnalysesViewModel : ViewModelBase, INavigabl
     });
 
     private bool PeutSauvegarder() => PeutGerer && EstModifie;
+
+    private bool EstCharge() => Mois > 0;
 
     private Task ChangerDeMoisAsync(int decalage)
     {

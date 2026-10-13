@@ -54,8 +54,11 @@ public static class ConstructeurDocumentFacture
         tableau.Columns.Add(new TableColumn { Width = new GridLength(1, GridUnitType.Star) });
 
         var emetteur = Bloc([impression.NomEmetteur, .. impression.AdresseEmetteur.Split('\n', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)]);
-        ((Paragraph)emetteur.Blocks.FirstBlock).FontSize = 16;
-        ((Paragraph)emetteur.Blocks.FirstBlock).FontWeight = FontWeights.Bold;
+        if (emetteur.Blocks.FirstBlock is Paragraph nomEmetteur)
+        {
+            nomEmetteur.FontSize = 16;
+            nomEmetteur.FontWeight = FontWeights.Bold;
+        }
 
         var references = Bloc(
             $"Facture n° {facture.NumeroFacture.ToString("D6", _culture)}",

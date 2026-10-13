@@ -42,7 +42,7 @@ public sealed partial class ResultatsEchantillonsViewModel : GrillePagineeViewMo
 
     public override async Task InitialiserAsync(string? parametre, CancellationToken jetonAnnulation)
     {
-        Clients = await OptionsFiltre.ClientsAsync(_executeur, jetonAnnulation);
+        await ExecuterOccupeAsync(async jeton => Clients = await OptionsFiltre.ClientsAsync(_executeur, jeton));
         await ChargerAsync();
     }
 

@@ -35,7 +35,6 @@ public static class EnregistrementModules
         services.AjouterMenu(new EntreeMenu(20, "Documents", "dossier", Destinations.Documents, Permissions.Documents.Lire));
 
         // Clients
-        services.AddTransient<EchantillonsClientViewModel>();
         services.AjouterPage<ListeClientsViewModel>(Destinations.Clients, Permissions.Clients.Lire);
         services.AjouterPage<EditionClientViewModel>(Destinations.CreationClient, Permissions.Clients.Gerer);
         services.AjouterPage<EditionClientViewModel>(Destinations.RouteModificationClient, Permissions.Clients.Gerer);
