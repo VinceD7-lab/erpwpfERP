@@ -19,7 +19,7 @@ public sealed class WidgetActiviteAudit : IWidgetTableauDeBord
 
     public string Titre => $"Activité des {NombreJours} derniers jours";
 
-    public string Icone => "bi-activity";
+    public string Icone => Icones.Activite;
 
     public int Ordre => 20;
 

@@ -1,5 +1,6 @@
 using System.Globalization;
 using erpWeb.Core.Autorisation;
+using erpWeb.Core.Communs;
 using erpWeb.Core.Documents;
 
 namespace erpWeb.Core.TableauDeBord.Widgets;
@@ -19,7 +20,7 @@ public sealed class WidgetDerniersDocuments : IWidgetTableauDeBord
 
     public string Titre => "Derniers documents";
 
-    public string Icone => "bi-file-earmark-text";
+    public string Icone => Icones.Document;
 
     public int Ordre => 30;
 
@@ -33,7 +34,7 @@ public sealed class WidgetDerniersDocuments : IWidgetTableauDeBord
             .Select(document => new ElementListe(
                 document.NomFichier,
                 $"{document.TypeEntite} #{document.IdEntite} · {document.DateCreation.ToString("dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture)}",
-                $"/Documents/Telecharger/{document.Id}"))
+                Destinations.TelechargementDocument(document.Id)))
             .ToList();
 
         return new DonneesListe(elements, "Aucun document déposé.");

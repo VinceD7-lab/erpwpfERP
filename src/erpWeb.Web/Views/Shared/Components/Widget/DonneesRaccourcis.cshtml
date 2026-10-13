@@ -2,7 +2,7 @@
 <div class="d-grid gap-2">
     @foreach (var raccourci in Model.Raccourcis)
     {
-        <a href="@Url.Content("~" + raccourci.Url)" class="btn btn-outline-primary text-start" asp-permission="@raccourci.PermissionRequise">
+        <a href="@Url.Content("~/" + raccourci.Destination)" class="btn btn-outline-primary text-start" asp-permission="@raccourci.PermissionRequise">
             <i class="bi @raccourci.Icone me-2" aria-hidden="true"></i>@raccourci.Libelle
         </a>
     }

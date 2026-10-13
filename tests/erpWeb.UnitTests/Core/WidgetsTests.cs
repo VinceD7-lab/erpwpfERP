@@ -78,7 +78,7 @@ public sealed class WidgetsTests : IDisposable
         var liste = Assert.IsType<DonneesListe>(donnees);
         var element = Assert.Single(liste.Elements);
         Assert.Equal("devis.pdf", element.Libelle);
-        Assert.Equal("/Documents/Telecharger/7", element.Url);
+        Assert.Equal("Documents/Telecharger/7", element.Destination);
     }
 
     [Fact]

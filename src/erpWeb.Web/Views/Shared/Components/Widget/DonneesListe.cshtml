@@ -9,9 +9,9 @@ else
         @foreach (var element in Model.Elements)
         {
             <li class="list-group-item px-0">
-                @if (element.Url is not null)
+                @if (element.Destination is not null)
                 {
-                    <a href="@Url.Content("~" + element.Url)" class="fw-medium text-break">@element.Libelle</a>
+                    <a href="@Url.Content("~/" + element.Destination)" class="fw-medium text-break">@element.Libelle</a>
                 }
                 else
                 {

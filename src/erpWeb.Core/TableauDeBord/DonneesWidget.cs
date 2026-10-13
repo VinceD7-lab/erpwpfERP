@@ -14,8 +14,8 @@ public sealed record SerieGraphique(string Libelle, IReadOnlyList<int> Valeurs);
 
 public sealed record DonneesListe(IReadOnlyList<ElementListe> Elements, string MessageVide) : DonneesWidget;
 
-public sealed record ElementListe(string Libelle, string? Detail, string? Url);
+public sealed record ElementListe(string Libelle, string? Detail, string? Destination);
 
 public sealed record DonneesRaccourcis(IReadOnlyList<Raccourci> Raccourcis) : DonneesWidget;
 
-public sealed record Raccourci(string Libelle, string Icone, string Url, string? PermissionRequise);
+public sealed record Raccourci(string Libelle, string Icone, string Destination, string? PermissionRequise);
