@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Référence la présentation WPF (ViewModels, navigation, règles d'architecture) -->
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -18,12 +21,14 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <!-- UseWPF retire System.IO des usings implicites -->
+    <Using Include="System.IO" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\erpWeb.Core\erpWeb.Core.csproj" />
     <ProjectReference Include="..\..\src\erpWeb.Infrastructure\erpWeb.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\erpWeb.Web\erpWeb.Web.csproj" />
+    <ProjectReference Include="..\..\src\erpWpf.Wpf\erpWpf.Wpf.csproj" />
   </ItemGroup>
 
 </Project>

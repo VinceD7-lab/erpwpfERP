@@ -16,7 +16,7 @@ public static class ColonnesPlanning
     public static readonly DependencyProperty JoursProperty = DependencyProperty.RegisterAttached(
         "Jours", typeof(IReadOnlyList<JourPlanningViewModel>), typeof(ColonnesPlanning), new PropertyMetadata(null, SurJoursModifies));
 
-    private static readonly DependencyProperty NombreColonnesFixesProperty =
+    private static readonly DependencyProperty _proprieteNombreColonnesFixes =
         DependencyProperty.RegisterAttached("NombreColonnesFixes", typeof(int), typeof(ColonnesPlanning), new PropertyMetadata(-1));
 
     public static IReadOnlyList<JourPlanningViewModel>? GetJours(DependencyObject element) => (IReadOnlyList<JourPlanningViewModel>?)element.GetValue(JoursProperty);
@@ -30,11 +30,11 @@ public static class ColonnesPlanning
             return;
         }
 
-        var fixes = (int)grille.GetValue(NombreColonnesFixesProperty);
+        var fixes = (int)grille.GetValue(_proprieteNombreColonnesFixes);
         if (fixes < 0)
         {
             fixes = grille.Columns.Count;
-            grille.SetValue(NombreColonnesFixesProperty, fixes);
+            grille.SetValue(_proprieteNombreColonnesFixes, fixes);
         }
 
         while (grille.Columns.Count > fixes)

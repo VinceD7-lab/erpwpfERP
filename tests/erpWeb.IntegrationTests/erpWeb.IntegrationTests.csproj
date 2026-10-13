@@ -1,6 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <!-- Composition réelle de l'application WPF (ConstructionHote) sur une base SQL Server temporaire -->
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -9,15 +12,16 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
+    <!-- UseWPF retire System.IO des usings implicites -->
+    <Using Include="System.IO" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\erpWeb.Web\erpWeb.Web.csproj" />
+    <ProjectReference Include="..\..\src\erpWpf.Wpf\erpWpf.Wpf.csproj" />
   </ItemGroup>
 
 </Project>

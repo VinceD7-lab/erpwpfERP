@@ -8,10 +8,10 @@ indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-[*.{json,yml,yaml,csproj,props,xml,cshtml,css,js}]
+[*.{json,yml,yaml,csproj,props,xml}]
 indent_size = 2
 
-[*.{cshtml}]
+[*.xaml]
 indent_size = 4
 
 [*.md]
@@ -87,10 +87,6 @@ dotnet_naming_symbols.constantes.required_modifiers = const
 dotnet_naming_rule.constantes_en_pascal.symbols = constantes
 dotnet_naming_rule.constantes_en_pascal.style = pascal
 dotnet_naming_rule.constantes_en_pascal.severity = warning
-
-# Actions MVC : le nom de l'action est l'URL (ASP.NET Core retire le suffixe Async), pas de suffixe imposé
-[src/erpWeb.Web/Controllers/*.cs]
-dotnet_naming_rule.methodes_asynchrones_suffixees.severity = none
 
 # Les migrations EF Core sont générées : pas d'analyse de style
 [**/Migrations/*.cs]

@@ -16,7 +16,7 @@ public static class LiaisonMotDePasse
         // Valeur par défaut null : la première valeur liée (chaîne vide) déclenche le rappel, qui abonne le champ.
         new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, SurMotDePasseModifie));
 
-    private static readonly DependencyProperty AbonneProperty =
+    private static readonly DependencyProperty _proprieteAbonne =
         DependencyProperty.RegisterAttached("Abonne", typeof(bool), typeof(LiaisonMotDePasse));
 
     public static string? GetMotDePasse(DependencyObject element) => (string?)element.GetValue(MotDePasseProperty);
@@ -30,9 +30,9 @@ public static class LiaisonMotDePasse
             return;
         }
 
-        if (!(bool)champ.GetValue(AbonneProperty))
+        if (!(bool)champ.GetValue(_proprieteAbonne))
         {
-            champ.SetValue(AbonneProperty, true);
+            champ.SetValue(_proprieteAbonne, true);
             champ.PasswordChanged += (_, _) => SetMotDePasse(champ, champ.Password);
         }
 
