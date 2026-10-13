@@ -6,7 +6,9 @@
                     xmlns:tableauDeBord="clr-namespace:erpWpf.Wpf.ViewModels.TableauDeBord"
                     xmlns:vuesTableauDeBord="clr-namespace:erpWpf.Wpf.Views.TableauDeBord"
                     xmlns:clients="clr-namespace:erpWpf.Wpf.ViewModels.Clients"
-                    xmlns:vuesclients="clr-namespace:erpWpf.Wpf.Views.Clients">
+                    xmlns:vuesclients="clr-namespace:erpWpf.Wpf.Views.Clients"
+                    xmlns:documents="clr-namespace:erpWpf.Wpf.ViewModels.Documents"
+                    xmlns:vuesdocuments="clr-namespace:erpWpf.Wpf.Views.Documents">
 
     <DataTemplate DataType="{x:Type compte:ConnexionViewModel}">
         <vuesCompte:ConnexionVue />
@@ -28,6 +30,14 @@
 
     <DataTemplate DataType="{x:Type clients:EditionClientViewModel}">
         <vuesclients:EditionClientVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type documents:ListeDocumentsViewModel}">
+        <vuesdocuments:ListeDocumentsVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type documents:DepotDocumentViewModel}">
+        <vuesdocuments:DepotDocumentVue />
     </DataTemplate>
 
 </ResourceDictionary>

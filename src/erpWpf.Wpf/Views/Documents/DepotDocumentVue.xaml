@@ -1,0 +1,35 @@
+<UserControl x:Class="erpWpf.Wpf.Views.Documents.DepotDocumentVue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.Documents"
+             xmlns:controles="clr-namespace:erpWpf.Wpf.Controles"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:DepotDocumentViewModel}">
+    <StackPanel MaxWidth="560" HorizontalAlignment="Left">
+        <controles:EnTetePage Titre="{Binding Titre}" />
+        <Border Style="{StaticResource Carte}">
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding Erreurs}" Style="{StaticResource ResumeErreurs}" />
+
+                <TextBlock Text="Type d'entité" Style="{StaticResource TexteLibelle}" />
+                <TextBox Text="{Binding TypeEntite, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Type d'entité" />
+                <TextBlock Text="Identifiant de l'entité" Style="{StaticResource TexteLibelle}" />
+                <TextBox Text="{Binding IdEntite, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Identifiant de l'entité" />
+
+                <TextBlock Text="Fichier" Style="{StaticResource TexteLibelle}" />
+                <DockPanel>
+                    <Button DockPanel.Dock="Right" Content="Parcourir…" Command="{Binding ChoisirFichierCommand}" Margin="8,0,0,0" />
+                    <TextBox Text="{Binding Fichier.Nom, Mode=OneWay}" IsReadOnly="True" AutomationProperties.Name="Fichier choisi" />
+                </DockPanel>
+                <TextBlock Style="{StaticResource TexteSecondaire}" FontSize="11" Margin="0,3,0,0" Text="Taille maximale : 10 Mo." />
+
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                    <Button Content="Déposer" Style="{StaticResource BoutonPrincipal}" IsDefault="True"
+                            Command="{Binding DeposerCommand}" Margin="0,0,8,0" />
+                    <Button Content="Annuler" IsCancel="True" Command="{Binding AnnulerCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>
