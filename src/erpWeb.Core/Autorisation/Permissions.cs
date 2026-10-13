@@ -1,0 +1,78 @@
+namespace erpWeb.Core.Autorisation;
+
+/// <summary>
+/// Permissions fines par module et par action, portées par des claims de rôle.
+/// Chaque permission correspond à une policy d'autorisation du même nom.
+/// </summary>
+public static class Permissions
+{
+    public const string TypeClaim = "permission";
+
+    public static class Utilisateurs
+    {
+        public const string Lire = "Utilisateurs.Lire";
+        public const string Gerer = "Utilisateurs.Gerer";
+    }
+
+    public static class JournalAudit
+    {
+        public const string Lire = "JournalAudit.Lire";
+        public const string Exporter = "JournalAudit.Exporter";
+    }
+
+    public static class Documents
+    {
+        public const string Lire = "Documents.Lire";
+        public const string Deposer = "Documents.Deposer";
+        public const string Supprimer = "Documents.Supprimer";
+    }
+
+    public static class Parametres
+    {
+        public const string Lire = "Parametres.Lire";
+        public const string Modifier = "Parametres.Modifier";
+    }
+
+    public static class Clients
+    {
+        public const string Lire = "Clients.Lire";
+        public const string Gerer = "Clients.Gerer";
+    }
+
+    public static class Echantillons
+    {
+        public const string Lire = "Echantillons.Lire";
+    }
+
+    public static class Factures
+    {
+        public const string Lire = "Factures.Lire";
+        public const string Generer = "Factures.Generer";
+    }
+
+    public static class PlanningAnalyses
+    {
+        public const string Lire = "PlanningAnalyses.Lire";
+        public const string Gerer = "PlanningAnalyses.Gerer";
+    }
+
+    public static IReadOnlyList<string> Toutes { get; } =
+    [
+        Utilisateurs.Lire,
+        Utilisateurs.Gerer,
+        JournalAudit.Lire,
+        JournalAudit.Exporter,
+        Documents.Lire,
+        Documents.Deposer,
+        Documents.Supprimer,
+        Parametres.Lire,
+        Parametres.Modifier,
+        Clients.Lire,
+        Clients.Gerer,
+        Echantillons.Lire,
+        Factures.Lire,
+        Factures.Generer,
+        PlanningAnalyses.Lire,
+        PlanningAnalyses.Gerer,
+    ];
+}
