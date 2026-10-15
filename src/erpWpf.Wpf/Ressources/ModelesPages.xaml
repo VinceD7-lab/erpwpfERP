@@ -1,0 +1,91 @@
+<!-- Association ViewModel → vue : chaque écran ajoute ici son DataTemplate (résolution implicite par DataType). -->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:compte="clr-namespace:erpWpf.Wpf.ViewModels.Compte"
+                    xmlns:vuesCompte="clr-namespace:erpWpf.Wpf.Views.Compte"
+                    xmlns:tableauDeBord="clr-namespace:erpWpf.Wpf.ViewModels.TableauDeBord"
+                    xmlns:vuesTableauDeBord="clr-namespace:erpWpf.Wpf.Views.TableauDeBord"
+                    xmlns:clients="clr-namespace:erpWpf.Wpf.ViewModels.Clients"
+                    xmlns:vuesclients="clr-namespace:erpWpf.Wpf.Views.Clients"
+                    xmlns:documents="clr-namespace:erpWpf.Wpf.ViewModels.Documents"
+                    xmlns:vuesdocuments="clr-namespace:erpWpf.Wpf.Views.Documents"
+                    xmlns:echantillons="clr-namespace:erpWpf.Wpf.ViewModels.Echantillons"
+                    xmlns:vuesechantillons="clr-namespace:erpWpf.Wpf.Views.Echantillons"
+                    xmlns:factures="clr-namespace:erpWpf.Wpf.ViewModels.Factures"
+                    xmlns:vuesfactures="clr-namespace:erpWpf.Wpf.Views.Factures"
+                    xmlns:journalAudit="clr-namespace:erpWpf.Wpf.ViewModels.JournalAudit"
+                    xmlns:vuesjournalAudit="clr-namespace:erpWpf.Wpf.Views.JournalAudit"
+                    xmlns:parametres="clr-namespace:erpWpf.Wpf.ViewModels.Parametres"
+                    xmlns:vuesparametres="clr-namespace:erpWpf.Wpf.Views.Parametres"
+                    xmlns:planning="clr-namespace:erpWpf.Wpf.ViewModels.PlanningAnalyses"
+                    xmlns:vuesplanning="clr-namespace:erpWpf.Wpf.Views.PlanningAnalyses"
+                    xmlns:utilisateurs="clr-namespace:erpWpf.Wpf.ViewModels.Utilisateurs"
+                    xmlns:vuesutilisateurs="clr-namespace:erpWpf.Wpf.Views.Utilisateurs">
+
+    <DataTemplate DataType="{x:Type compte:ConnexionViewModel}">
+        <vuesCompte:ConnexionVue />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type compte:InscriptionViewModel}">
+        <vuesCompte:InscriptionVue />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type compte:AccesRefuseViewModel}">
+        <vuesCompte:AccesRefuseVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type tableauDeBord:TableauDeBordViewModel}">
+        <vuesTableauDeBord:TableauDeBordVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type clients:ListeClientsViewModel}">
+        <vuesclients:ListeClientsVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type clients:EditionClientViewModel}">
+        <vuesclients:EditionClientVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type documents:ListeDocumentsViewModel}">
+        <vuesdocuments:ListeDocumentsVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type documents:DepotDocumentViewModel}">
+        <vuesdocuments:DepotDocumentVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type echantillons:ResultatsEchantillonsViewModel}">
+        <vuesechantillons:ResultatsEchantillonsVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type factures:ListeFacturesViewModel}">
+        <vuesfactures:ListeFacturesVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type factures:ImpressionFactureViewModel}">
+        <vuesfactures:ImpressionFactureVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type journalAudit:JournalAuditViewModel}">
+        <vuesjournalAudit:JournalAuditVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type parametres:ListeParametresViewModel}">
+        <vuesparametres:ListeParametresVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type parametres:EditionParametreViewModel}">
+        <vuesparametres:EditionParametreVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type planning:PlanningAnalysesViewModel}">
+        <vuesplanning:PlanningAnalysesVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type utilisateurs:ListeUtilisateursViewModel}">
+        <vuesutilisateurs:ListeUtilisateursVue />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type utilisateurs:EditionUtilisateurViewModel}">
+        <vuesutilisateurs:EditionUtilisateurVue />
+    </DataTemplate>
+
+</ResourceDictionary>

@@ -1,0 +1,15 @@
+<Window x:Class="erpWpf.Wpf.Fenetres.FenetreErreur"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="erpWpf — Erreur" Width="480" SizeToContent="Height"
+        WindowStartupLocation="CenterOwner" ResizeMode="NoResize" ShowInTaskbar="False"
+        Background="{StaticResource PinceauFond}">
+    <StackPanel Margin="24">
+        <TextBlock Text="Une erreur inattendue est survenue." Style="{StaticResource TexteTitre}" Margin="0,0,0,12" />
+        <TextBlock Style="{StaticResource TexteSecondaire}"
+                   Text="L'opération n'a pas pu aboutir. Réessayez ; si le problème persiste, communiquez l'identifiant ci-dessous à l'administrateur (détail dans le journal d'événements Windows)." />
+        <TextBox x:Name="ChampIdentifiant" IsReadOnly="True" Margin="0,12,0,16" AutomationProperties.Name="Identifiant de l'erreur" />
+        <Button Content="Fermer" IsDefault="True" IsCancel="True" HorizontalAlignment="Right" MinWidth="90"
+                Style="{StaticResource BoutonPrincipal}" Click="SurFermer" />
+    </StackPanel>
+</Window>

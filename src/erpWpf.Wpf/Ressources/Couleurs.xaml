@@ -1,0 +1,40 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Color x:Key="CouleurPrimaire">#FF1F5FBF</Color>
+    <Color x:Key="CouleurPrimaireSurvol">#FF184C99</Color>
+    <Color x:Key="CouleurFond">#FFF3F5F8</Color>
+    <Color x:Key="CouleurSurface">#FFFFFFFF</Color>
+    <Color x:Key="CouleurBordure">#FFD9DEE5</Color>
+    <Color x:Key="CouleurTexte">#FF1E2329</Color>
+    <Color x:Key="CouleurTexteSecondaire">#FF5B6570</Color>
+    <Color x:Key="CouleurMenu">#FF1C2633</Color>
+    <Color x:Key="CouleurMenuSurvol">#FF2A394B</Color>
+    <Color x:Key="CouleurMenuActif">#FF33507A</Color>
+    <Color x:Key="CouleurSucces">#FF1E7B45</Color>
+    <Color x:Key="CouleurFondSucces">#FFE3F4EA</Color>
+    <Color x:Key="CouleurDanger">#FFB42318</Color>
+    <Color x:Key="CouleurFondDanger">#FFFDECEA</Color>
+    <Color x:Key="CouleurInfo">#FF175CD3</Color>
+    <Color x:Key="CouleurNeutre">#FF667085</Color>
+    <Color x:Key="CouleurWeekEnd">#FFE9ECF0</Color>
+
+    <SolidColorBrush x:Key="PinceauPrimaire" Color="{StaticResource CouleurPrimaire}" />
+    <SolidColorBrush x:Key="PinceauPrimaireSurvol" Color="{StaticResource CouleurPrimaireSurvol}" />
+    <SolidColorBrush x:Key="PinceauFond" Color="{StaticResource CouleurFond}" />
+    <SolidColorBrush x:Key="PinceauSurface" Color="{StaticResource CouleurSurface}" />
+    <SolidColorBrush x:Key="PinceauBordure" Color="{StaticResource CouleurBordure}" />
+    <SolidColorBrush x:Key="PinceauTexte" Color="{StaticResource CouleurTexte}" />
+    <SolidColorBrush x:Key="PinceauTexteSecondaire" Color="{StaticResource CouleurTexteSecondaire}" />
+    <SolidColorBrush x:Key="PinceauMenu" Color="{StaticResource CouleurMenu}" />
+    <SolidColorBrush x:Key="PinceauMenuSurvol" Color="{StaticResource CouleurMenuSurvol}" />
+    <SolidColorBrush x:Key="PinceauMenuActif" Color="{StaticResource CouleurMenuActif}" />
+    <SolidColorBrush x:Key="PinceauSucces" Color="{StaticResource CouleurSucces}" />
+    <SolidColorBrush x:Key="PinceauFondSucces" Color="{StaticResource CouleurFondSucces}" />
+    <SolidColorBrush x:Key="PinceauDanger" Color="{StaticResource CouleurDanger}" />
+    <SolidColorBrush x:Key="PinceauFondDanger" Color="{StaticResource CouleurFondDanger}" />
+    <SolidColorBrush x:Key="PinceauInfo" Color="{StaticResource CouleurInfo}" />
+    <SolidColorBrush x:Key="PinceauNeutre" Color="{StaticResource CouleurNeutre}" />
+    <SolidColorBrush x:Key="PinceauWeekEnd" Color="{StaticResource CouleurWeekEnd}" />
+
+</ResourceDictionary>

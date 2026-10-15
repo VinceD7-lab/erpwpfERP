@@ -1,12 +1,14 @@
 # Branche `fonctionnalite/factures-echantillons`
 
+> Plan réalisé sur la version web, puis porté sur WPF par la branche `refactorisation/migration-wpf` : les sections Core, Infrastructure et données sont inchangées ; la présentation, les tests d'intégration et la vérification décrits ci-dessous sont ceux de la version WPF.
+
 ## Plan : page « Factures » des échantillons + impression
 
 ### Contexte
 
-Chaque échantillon doit avoir une facture. Aucune notion de facture ni de tarif n'existe encore. Choix validés : factures **calculées à la volée puis persistées** (table `Factures`, 1-1 avec `Echantillon`), impression via **page HTML imprimable** (`@media print` + `window.print()`, aucune dépendance ajoutée).
+Chaque échantillon doit avoir une facture. Aucune notion de facture ni de tarif n'existe encore. Choix validés : factures **calculées à la volée puis persistées** (table `Factures`, 1-1 avec `Echantillon`), impression via un **`FlowDocument` WPF** (aperçu à l'écran et `PrintDialog`, aucune dépendance ajoutée ; à l'origine page HTML imprimable).
 
-Modèle à suivre : module Échantillons (lecture seule, grille Tabulator paginée serveur, îlot Vue) — pas de CRUD, donc pas de `/nouveau-module` complet.
+Modèle à suivre : module Échantillons (lecture seule, grille paginée côté serveur `GrillePagineeViewModel`) — pas de CRUD, donc pas de `/nouveau-module` complet.
 
 ### Core (`src/erpWeb.Core/Factures/`)
 
@@ -17,7 +19,7 @@ Modèle à suivre : module Échantillons (lecture seule, grille Tabulator pagin�
 - `IGenerationFactures.GenererManquantesAsync(ct)` / `ServiceGenerationFactures` : crée en base les factures absentes (idempotent, `NumeroFacture` = max+1 séquentiel, transaction), appelé à l'ouverture de la liste.
 - `IRechercheFactures.RechercherAsync(CriteresFactures, ct)` → `ResultatPagine<FactureDto>` (filtres : période, client, statut ; tri liste blanche), calqué sur `ServiceRechercheResultatsEchantillons`.
 - `IServiceImpressionFacture.ObtenirAsync(id, ct)` → `FactureDto` détaillé (+ code-barres/filière de l'échantillon).
-- Enregistrement manuel dans `DependencyInjection.cs`; `OptionsFacturation` liée dans `Program.cs`.
+- Enregistrement manuel dans `DependencyInjection.cs`; `OptionsFacturation` liée dans `Hote/ConstructionHote` (`ValidateOnStart`).
 - `Permissions.Factures.Lire` (+ ajout à `Toutes` et rôle `Utilisateur`).
 
 ### Infrastructure
@@ -27,13 +29,13 @@ Modèle à suivre : module Échantillons (lecture seule, grille Tabulator pagin�
 - Migration `AjoutFactures` (via agent `expert-migrations`, une seule migration).
 - `ServiceClients.SupprimerAsync` : refuser aussi si le client a des factures (déjà couvert par échantillons, vérifier).
 
-### Web
+### Présentation WPF (`src/erpWpf.Wpf/`)
 
-- `FacturesController` (`[Authorize(Policy = Permissions.Factures.Lire)]`, sealed, mince) : `Index` (déclenche génération manquantes puis vue), `Resultats` (JSON paginé), `Imprimer(int id)` (vue facture).
-- `Views/Factures/Index.cshtml` : `en-tete-page`, îlot `data-composant-vue="tableau-factures"`, styles/scripts Tabulator comme `Echantillons/Index`.
-- `wwwroot/js/composants/tableau-factures.js` : filtres + grille (tous les champs demandés, montants formatés fr-FR, colonne **Imprimer** avec bouton `bi-printer` ouvrant `Factures/Imprimer/{id}` dans un nouvel onglet ; cellules en `textContent`).
-- `Views/Factures/Imprimer.cshtml` : mise en page facture (émetteur, client, lignes, HT/remise/TVA/TTC, échéance, mode de paiement, commentaire), bouton « Imprimer » masqué à l'impression, `window.print()` automatique optionnel ; règles `@media print` ajoutées à `wwwroot/css/site.css` (masque sidebar/navbar).
-- Menu : entrée dans `_Layout.cshtml` (`asp-permission`, icône `bi-receipt`).
+- `ViewModels/Factures/ListeFacturesViewModel` (`GrillePagineeViewModel<FactureDto, ChampTriFactures>`) : filtres période, client, statut ; commande `Generer` protégée par `Permissions.Factures.Generer` ; commande `Imprimer` vers `Destinations.ImpressionFacture(id)`.
+- `ViewModels/Factures/ImpressionFactureViewModel` (`INavigable`, paramètre = identifiant) : charge `ImpressionFactureDto`, retour à la liste avec message si la facture est introuvable, `Imprimer` via `IServiceImpression`.
+- `Views/Factures/ListeFacturesVue.xaml` : `DataGrid` (tous les champs demandés, montants `N2`, badge de statut `ModeleBadge`), tri serveur `TriServeur`, `BarrePagination`, bouton icône d'impression par ligne.
+- `Views/Factures/ImpressionFactureVue.xaml` : `FlowDocumentScrollViewer` alimenté par `FactureVersDocument` ; `Impression/ConstructeurDocumentFacture` construit le même document pour l'aperçu et l'impression (émetteur, client, ligne, remise, HT/TVA/TTC, échéance, mode de paiement, commentaire).
+- `Hote/EnregistrementModules` : pages `Factures` et `Factures/Imprimer` (`Permissions.Factures.Lire`), entrée de menu (icône `factures`).
 
 ### Données de démonstration
 
@@ -42,12 +44,13 @@ Pas de générateur séparé nécessaire : la génération à la volée crée le
 ### Tests (agent `redacteur-tests`)
 
 - Unitaires : `CalculateurFactureTests` (arrondis, remise, TVA, TTC, échéance, statut en retard), `ServiceGenerationFacturesTests` (idempotence, numérotation, échantillon sans client), `ServiceRechercheFacturesTests` (filtres, tri, pagination).
-- Intégration : `FacturesTests` (Index/Resultats/Imprimer, 401/403, tri inconnu → 400, unicité, FK Restrict).
+- ViewModels : génération idempotente, permission de génération, tri hors liste blanche ignoré.
+- Intégration (`HoteApplication`) : `FacturesTests` (génération, recherche par client, aperçu et impression, facture inconnue, accès refusé sans permission) et `ContraintesFacturesTests` (unicité, FK Restrict, CHECK).
 - Test d'architecture existant doit rester vert (Core sans dépendance).
 
 ### Vérification
 
-`dotnet build erpWeb.sln` ; `dotnet test erpWeb.sln` ; `dotnet format erpWeb.sln --verify-no-changes` ; `dotnet run --project src/erpWeb.Web` en Développement : ouvrir Factures, vérifier une ligne par échantillon facturable, cliquer Imprimer et contrôler l'aperçu d'impression ; puis `/preparer-pr` et agent `revue-conception`.
+`dotnet build erpWpf.sln` ; `dotnet test erpWpf.sln` ; `dotnet format erpWpf.sln --verify-no-changes` ; `dotnet run --project src/erpWpf.Wpf` en Development : ouvrir Factures, générer les factures manquantes, vérifier une ligne par échantillon facturable, ouvrir l'aperçu et imprimer ; puis `/preparer-pr` et agent `revue-conception`.
 
 ### Point à confirmer à l'implémentation
 

@@ -18,7 +18,7 @@ public sealed class WidgetUtilisateursActifs : IWidgetTableauDeBord
 
     public string Titre => "Utilisateurs actifs";
 
-    public string Icone => "bi-people";
+    public string Icone => Icones.Utilisateurs;
 
     public int Ordre => 10;
 

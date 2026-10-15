@@ -1,4 +1,4 @@
-# Contribuer à erpWeb
+# Contribuer à erpWpf
 
 Le projet suit le **GitHub Flow**. La spécification complète (architecture, principes SOLID/STUPID) est dans [docs/prompt-generation-socle-erp.md](docs/prompt-generation-socle-erp.md).
 
@@ -14,7 +14,7 @@ Le projet suit le **GitHub Flow**. La spécification complète (architecture, pr
 
 3. Faire des commits petits et atomiques, pousser régulièrement.
 4. Ouvrir une Pull Request dès que possible (en brouillon si le travail est en cours) ; remplir le modèle.
-5. Fusionner uniquement si la CI est verte et après au moins une relecture approuvée.
+5. Fusionner uniquement si la CI (job `build-test` de `.github/workflows/ci.yml`, sur Windows) est verte et après au moins une relecture approuvée.
 6. Fusion en **squash merge**, puis suppression de la branche.
 
 ## Nommage des branches
@@ -45,7 +45,7 @@ Types autorisés : `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `ci`.
 - Au plus **une migration par Pull Request**, nommée en français :
 
   ```bash
-  dotnet ef migrations add AjoutTableClients -p src/erpWeb.Infrastructure -s src/erpWeb.Web -o Donnees/Migrations
+  dotnet ef migrations add AjoutTableClients -p src/erpWeb.Infrastructure -s src/erpWpf.Wpf -o Donnees/Migrations
   ```
 
 - Avant fusion, mettre la branche à jour depuis `main`. En cas de conflit sur `AppDbContextModelSnapshot.cs`, supprimer la migration de la branche (`dotnet ef migrations remove`) et la régénérer.
@@ -56,9 +56,9 @@ Types autorisés : `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `ci`.
 Les mêmes contrôles sont exécutés par la CI et bloquent la fusion :
 
 ```bash
-dotnet build erpWeb.sln
-dotnet format erpWeb.sln --verify-no-changes
-dotnet test erpWeb.sln
+dotnet build erpWpf.sln
+dotnet format erpWpf.sln --verify-no-changes
+dotnet test erpWpf.sln
 ```
 
 ## Avec Claude Code

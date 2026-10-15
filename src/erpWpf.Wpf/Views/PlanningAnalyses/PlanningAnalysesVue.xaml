@@ -1,0 +1,54 @@
+<UserControl x:Class="erpWpf.Wpf.Views.PlanningAnalyses.PlanningAnalysesVue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.PlanningAnalyses"
+             xmlns:controles="clr-namespace:erpWpf.Wpf.Controles"
+             xmlns:comportements="clr-namespace:erpWpf.Wpf.Comportements"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:PlanningAnalysesViewModel}">
+    <DockPanel>
+        <controles:EnTetePage DockPanel.Dock="Top" Titre="{Binding Titre}">
+            <StackPanel Orientation="Horizontal">
+                <Button Style="{StaticResource BoutonIcone}" Content="{Binding Source=precedent, Converter={StaticResource NomIconeVersGlyphe}}"
+                        Command="{Binding MoisPrecedentCommand}" ToolTip="Mois précédent" AutomationProperties.Name="Mois précédent" />
+                <TextBlock Text="{Binding LibelleMois}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" Width="150"
+                           TextAlignment="Center" AutomationProperties.LiveSetting="Polite" />
+                <Button Style="{StaticResource BoutonIcone}" Content="{Binding Source=suivant, Converter={StaticResource NomIconeVersGlyphe}}"
+                        Command="{Binding MoisSuivantCommand}" ToolTip="Mois suivant" AutomationProperties.Name="Mois suivant" Margin="0,0,16,0" />
+                <Button Style="{StaticResource BoutonPrincipal}" Command="{Binding SauvegarderCommand}"
+                        Visibility="{Binding PeutGerer, Converter={StaticResource BooleenVersVisibilite}}" AutomationProperties.Name="Sauvegarder">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Icone}" Text="{Binding Source=enregistrer, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,6,0" />
+                        <TextBlock Text="Sauvegarder" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </controles:EnTetePage>
+
+        <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Erreurs}" Style="{StaticResource ResumeErreurs}" />
+        <TextBlock DockPanel.Dock="Top" Text="Aucun client à planifier." Style="{StaticResource TexteSecondaire}"
+                   Visibility="{Binding EstVide, Converter={StaticResource BooleenVersVisibilite}}" />
+        <TextBlock DockPanel.Dock="Bottom" Style="{StaticResource TexteSecondaire}" Margin="0,8,0,0"
+                   Text="A : toutes les analyses ; B, C, D : toutes sauf une, deux ou trois. Les week-ends et jours fériés ne sont pas planifiables." />
+
+        <Grid>
+            <DataGrid ItemsSource="{Binding Lignes}" FrozenColumnCount="1" RowHeight="34"
+                      SelectionUnit="Cell" HorizontalScrollBarVisibility="Auto"
+                      comportements:ColonnesPlanning.Jours="{Binding Jours}"
+                      AutomationProperties.Name="Planning des analyses">
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource {x:Type DataGridColumnHeader}}">
+                        <Setter Property="HorizontalContentAlignment" Value="Center" />
+                        <Setter Property="Padding" Value="2,4" />
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Client" Binding="{Binding RaisonSociale}" Width="220" CanUserSort="False" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <ProgressBar IsIndeterminate="True" Height="3" VerticalAlignment="Top"
+                         Visibility="{Binding EstOccupe, Converter={StaticResource BooleenVersVisibilite}}" />
+        </Grid>
+    </DockPanel>
+</UserControl>

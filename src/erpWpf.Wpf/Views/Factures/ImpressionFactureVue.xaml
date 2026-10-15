@@ -1,0 +1,30 @@
+<UserControl x:Class="erpWpf.Wpf.Views.Factures.ImpressionFactureVue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.Factures"
+             xmlns:controles="clr-namespace:erpWpf.Wpf.Controles"
+             xmlns:convertisseurs="clr-namespace:erpWpf.Wpf.Ressources.Convertisseurs"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:ImpressionFactureViewModel}">
+    <UserControl.Resources>
+        <convertisseurs:FactureVersDocument x:Key="FactureVersDocument" />
+    </UserControl.Resources>
+    <DockPanel>
+        <controles:EnTetePage DockPanel.Dock="Top" Titre="{Binding Titre}">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding RetourCommand}" Content="Retour aux factures" Margin="0,0,8,0" />
+                <Button Style="{StaticResource BoutonPrincipal}" Command="{Binding ImprimerCommand}" AutomationProperties.Name="Imprimer">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Style="{StaticResource Icone}" Text="{Binding Source=imprimer, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,6,0" />
+                        <TextBlock Text="Imprimer" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </controles:EnTetePage>
+        <Border Style="{StaticResource Carte}" Padding="0">
+            <FlowDocumentScrollViewer Document="{Binding Impression, Converter={StaticResource FactureVersDocument}}"
+                                      AutomationProperties.Name="Aperçu de la facture" />
+        </Border>
+    </DockPanel>
+</UserControl>

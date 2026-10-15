@@ -1,0 +1,29 @@
+<UserControl x:Class="erpWpf.Wpf.Views.Parametres.EditionParametreVue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.Parametres"
+             xmlns:controles="clr-namespace:erpWpf.Wpf.Controles"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:EditionParametreViewModel}">
+    <StackPanel Width="640" HorizontalAlignment="Left">
+        <controles:EnTetePage Titre="{Binding Titre}" />
+        <Border Style="{StaticResource Carte}">
+            <StackPanel>
+                <ItemsControl ItemsSource="{Binding Erreurs}" Style="{StaticResource ResumeErreurs}" />
+                <TextBlock Text="Clé" Style="{StaticResource TexteLibelle}" />
+                <TextBox Text="{Binding Cle, UpdateSourceTrigger=PropertyChanged}" FontFamily="Consolas"
+                         IsReadOnly="{Binding EstNouveau, Converter={StaticResource InverseBooleen}}" AutomationProperties.Name="Clé" />
+                <TextBlock Text="Valeur" Style="{StaticResource TexteLibelle}" />
+                <TextBox Text="{Binding Valeur, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" TextWrapping="Wrap"
+                         MinLines="3" VerticalContentAlignment="Top" AutomationProperties.Name="Valeur" />
+                <TextBlock Text="Description" Style="{StaticResource TexteLibelle}" />
+                <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Description" />
+                <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                    <Button Content="Enregistrer" Style="{StaticResource BoutonPrincipal}" Command="{Binding EnregistrerCommand}" Margin="0,0,8,0" />
+                    <Button Content="Annuler" IsCancel="True" Command="{Binding AnnulerCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </StackPanel>
+</UserControl>

@@ -1,25 +1,30 @@
 using System.Reflection;
 using erpWeb.Core.Communs;
 using erpWeb.Infrastructure.Donnees;
-using erpWeb.Web.Controllers;
-using Microsoft.AspNetCore.Mvc;
+using erpWpf.Wpf.Hote;
+using erpWpf.Wpf.ViewModels.Communs;
 using NetArchTest.Rules;
 
 namespace erpWeb.UnitTests.Architecture;
 
 /// <summary>
 /// Vérifie automatiquement les règles d'architecture du socle (dépendances entre couches,
-/// inversion de dépendances, absence d'accès direct au système de fichiers dans Core).
+/// inversion de dépendances, MVVM, absence d'accès direct au système de fichiers dans Core).
 /// </summary>
 public sealed class ArchitectureTests
 {
+    private const string EspaceViewModels = "erpWpf.Wpf.ViewModels";
+
     private static readonly Assembly _core = typeof(IAppDbContext).Assembly;
     private static readonly Assembly _infrastructure = typeof(AppDbContext).Assembly;
-    private static readonly Assembly _web = typeof(TableauDeBordController).Assembly;
+    private static readonly Assembly _presentation = typeof(ConstructionHote).Assembly;
 
     [Theory]
     [InlineData("erpWeb.Infrastructure")]
-    [InlineData("erpWeb.Web")]
+    [InlineData("erpWpf.Wpf")]
+    [InlineData("PresentationFramework")]
+    [InlineData("PresentationCore")]
+    [InlineData("WindowsBase")]
     [InlineData("Microsoft.EntityFrameworkCore.SqlServer")]
     [InlineData("Microsoft.Data.SqlClient")]
     [InlineData("Microsoft.EntityFrameworkCore.Sqlite")]
@@ -39,7 +44,7 @@ public sealed class ArchitectureTests
     {
         var resultat = Types.InAssembly(_core)
             .ShouldNot()
-            .HaveDependencyOnAny("erpWeb.Infrastructure", "erpWeb.Web")
+            .HaveDependencyOnAny("erpWeb.Infrastructure", "erpWpf.Wpf", "System.Windows")
             .GetResult();
 
         AssertReussi(resultat);
@@ -57,11 +62,13 @@ public sealed class ArchitectureTests
     }
 
     [Fact]
-    public void Web_NeDependDInfrastructureQueDansProgram()
+    public void Presentation_NeDependDInfrastructureQueDansLaCompositionRoot()
     {
-        var resultat = Types.InAssembly(_web)
+        var resultat = Types.InAssembly(_presentation)
             .That()
-            .ResideInNamespace("erpWeb.Web")
+            .DoNotResideInNamespace("erpWpf.Wpf.Hote")
+            .And()
+            .DoNotHaveName("App")
             .ShouldNot()
             .HaveDependencyOn("erpWeb.Infrastructure")
             .GetResult();
@@ -70,13 +77,11 @@ public sealed class ArchitectureTests
     }
 
     [Fact]
-    public void Controleurs_NAccedentPasDirectementAuxDonnees()
+    public void ViewModels_NAccedentPasDirectementAuxDonnees()
     {
-        // Sélection par espace de noms et non par héritage de Controller : un contrôleur d'API
-        // dérivant de ControllerBase échapperait sinon à la règle.
-        var resultat = Types.InAssembly(_web)
+        var resultat = Types.InAssembly(_presentation)
             .That()
-            .ResideInNamespace("erpWeb.Web.Controllers")
+            .ResideInNamespace(EspaceViewModels)
             .ShouldNot()
             .HaveDependencyOnAny(typeof(IAppDbContext).FullName!, "Microsoft.EntityFrameworkCore")
             .GetResult();
@@ -84,25 +89,75 @@ public sealed class ArchitectureTests
         AssertReussi(resultat);
     }
 
+    /// <summary>
+    /// Les ViewModels restent testables sans interface graphique : pas de contrôles, de médias, de documents,
+    /// de boîtes de dialogue ni de MessageBox. System.Windows.Input (ICommand) reste autorisé.
+    /// </summary>
     [Fact]
-    public void Controleurs_ResidentDansLEspaceDeNomsControllers()
+    public void ViewModels_NeDependentPasDesTypesGraphiques()
     {
-        // Ferme la porte de sortie de la règle précédente : un contrôleur placé ailleurs
-        // ne serait plus couvert par la vérification d'accès aux données.
-        var horsEspaceDeNoms = Types.InAssembly(_web)
+        var resultat = Types.InAssembly(_presentation)
             .That()
-            .HaveNameEndingWith("Controller")
+            .ResideInNamespace(EspaceViewModels)
+            .ShouldNot()
+            .HaveDependencyOnAny(
+                "System.Windows.Controls",
+                "System.Windows.Media",
+                "System.Windows.Documents",
+                "System.Windows.MessageBox",
+                "System.Windows.Window",
+                "Microsoft.Win32")
+            .GetResult();
+
+        AssertReussi(resultat);
+    }
+
+    [Fact]
+    public void ViewModels_NUtilisentPasLeServiceLocator()
+    {
+        var resultat = Types.InAssembly(_presentation)
+            .That()
+            .ResideInNamespace(EspaceViewModels)
+            .ShouldNot()
+            .HaveDependencyOnAny(typeof(IServiceProvider).FullName!, "Microsoft.Extensions.DependencyInjection.IServiceScopeFactory")
+            .GetResult();
+
+        AssertReussi(resultat);
+    }
+
+    [Fact]
+    public void ViewModels_ResidentDansLEspaceDeNomsViewModels()
+    {
+        // Ferme la porte de sortie des règles précédentes : un ViewModel placé ailleurs n'y serait plus soumis.
+        var horsEspaceDeNoms = Types.InAssembly(_presentation)
+            .That()
+            .HaveNameEndingWith("ViewModel")
             .And()
-            .DoNotResideInNamespace("erpWeb.Web.Controllers")
+            .DoNotResideInNamespace(EspaceViewModels)
             .GetTypes();
 
         Assert.Empty(horsEspaceDeNoms);
     }
 
     [Fact]
+    public void Ecrans_HeritentDeViewModelBase()
+    {
+        var ecrans = Types.InAssembly(_presentation)
+            .That()
+            .ResideInNamespace(EspaceViewModels)
+            .And()
+            .ImplementInterface(typeof(INavigable))
+            .GetTypes()
+            .Where(type => !typeof(ViewModelBase).IsAssignableFrom(type))
+            .ToList();
+
+        Assert.Empty(ecrans);
+    }
+
+    [Fact]
     public void Infrastructure_SeulAppDbContextImplementeIAppDbContext()
     {
-        var implementations = Types.InAssemblies([_core, _infrastructure, _web])
+        var implementations = Types.InAssemblies([_core, _infrastructure, _presentation])
             .That()
             .ImplementInterface(typeof(IAppDbContext))
             .GetTypes()
@@ -112,9 +167,9 @@ public sealed class ArchitectureTests
     }
 
     [Fact]
-    public void Core_LesInterfacesSontPrefixeesParI()
+    public void LesInterfacesSontPrefixeesParI()
     {
-        var resultat = Types.InAssembly(_core)
+        var resultat = Types.InAssemblies([_core, _presentation])
             .That()
             .AreInterfaces()
             .Should()

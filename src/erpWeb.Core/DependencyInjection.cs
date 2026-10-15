@@ -22,6 +22,7 @@ public static class DependencyInjection
         var assemblage = typeof(DependencyInjection).Assembly;
 
         services.AddScoped<IServiceUtilisateurs, ServiceUtilisateurs>();
+        services.AddScoped<IServiceAuthentification, ServiceAuthentification>();
         services.AddScoped<ILectureJournalAudit, ServiceJournalAudit>();
         services.AddScoped<IRechercheJournalAudit, ServiceRechercheJournalAudit>();
         services.AddScoped<IServiceDocuments, ServiceDocuments>();

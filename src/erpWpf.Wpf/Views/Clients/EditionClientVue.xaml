@@ -1,0 +1,25 @@
+<UserControl x:Class="erpWpf.Wpf.Views.Clients.EditionClientVue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.Clients"
+             xmlns:controles="clr-namespace:erpWpf.Wpf.Controles"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:EditionClientViewModel}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Width="760" HorizontalAlignment="Left">
+            <controles:EnTetePage Titre="{Binding Titre}" />
+            <Border Style="{StaticResource Carte}">
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding Erreurs}" Style="{StaticResource ResumeErreurs}" />
+                    <controles:ChampsClient DataContext="{Binding Champs}" />
+                    <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                        <Button Content="Enregistrer" Style="{StaticResource BoutonPrincipal}" IsDefault="True"
+                                Command="{Binding EnregistrerCommand}" Margin="0,0,8,0" />
+                        <Button Content="Annuler" IsCancel="True" Command="{Binding AnnulerCommand}" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

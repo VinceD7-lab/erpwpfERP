@@ -1,0 +1,88 @@
+<UserControl x:Class="erpWpf.Wpf.Views.Utilisateurs.ListeUtilisateursVue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.Utilisateurs"
+             xmlns:controles="clr-namespace:erpWpf.Wpf.Controles"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:ListeUtilisateursViewModel}">
+    <UserControl.Resources>
+        <controles:ProxyLiaison x:Key="Ecran" Donnees="{Binding}" />
+    </UserControl.Resources>
+    <DockPanel>
+        <controles:EnTetePage DockPanel.Dock="Top" Titre="{Binding Titre}">
+            <Button Style="{StaticResource BoutonPrincipal}" Command="{Binding CreerCommand}"
+                    Visibility="{Binding PeutGerer, Converter={StaticResource BooleenVersVisibilite}}" AutomationProperties.Name="Nouvel utilisateur">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Icone}" Text="{Binding Source=ajout-utilisateur, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,6,0" />
+                    <TextBlock Text="Nouvel utilisateur" />
+                </StackPanel>
+            </Button>
+        </controles:EnTetePage>
+
+        <DataGrid ItemsSource="{Binding Utilisateurs}" AutomationProperties.Name="Liste des utilisateurs">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nom" Binding="{Binding NomComplet}" Width="*" />
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*" />
+                <DataGridTemplateColumn Header="Rôles" Width="*" CanUserSort="False">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ItemsControl ItemsSource="{Binding Roles}" Focusable="False">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource Badge}" Background="#FFE4E9F0" Margin="0,0,4,0">
+                                            <TextBlock Text="{Binding}" FontSize="11" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Statut" Width="90" SortMemberPath="EstActif">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border x:Name="Fond" Style="{StaticResource Badge}" Background="{StaticResource PinceauNeutre}">
+                                <TextBlock Foreground="White" FontSize="11" Text="Inactif" x:Name="Libelle" />
+                            </Border>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding EstActif}" Value="True">
+                                    <Setter TargetName="Libelle" Property="Text" Value="Actif" />
+                                    <Setter TargetName="Fond" Property="Background" Value="{StaticResource PinceauSucces}" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Créé le" Binding="{Binding DateCreation, Converter={StaticResource UtcVersLocal}, ConverterParameter='dd/MM/yyyy'}"
+                                    SortMemberPath="DateCreation" Width="100" />
+                <DataGridTemplateColumn Header="Actions" Width="150" CanUserSort="False"
+                                        Visibility="{Binding Donnees.PeutGerer, Source={StaticResource Ecran}, Converter={StaticResource BooleenVersVisibilite}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource BoutonIcone}" Background="Transparent" BorderThickness="0" Padding="4" MinHeight="24"
+                                        Content="{Binding Source=modifier, Converter={StaticResource NomIconeVersGlyphe}}"
+                                        Command="{Binding Donnees.ModifierCommand, Source={StaticResource Ecran}}" CommandParameter="{Binding}"
+                                        ToolTip="Modifier" AutomationProperties.Name="{Binding NomComplet, StringFormat='Modifier {0}'}" />
+                                <Button x:Name="Bascule" Style="{StaticResource BoutonLien}" Content="Désactiver" Foreground="{StaticResource PinceauDanger}"
+                                        Command="{Binding Donnees.BasculerActivationCommand, Source={StaticResource Ecran}}" CommandParameter="{Binding}" />
+                            </StackPanel>
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding EstActif}" Value="False">
+                                    <Setter TargetName="Bascule" Property="Content" Value="Réactiver" />
+                                    <Setter TargetName="Bascule" Property="Foreground" Value="{StaticResource PinceauSucces}" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

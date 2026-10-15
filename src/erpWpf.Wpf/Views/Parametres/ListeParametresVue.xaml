@@ -1,0 +1,54 @@
+<UserControl x:Class="erpWpf.Wpf.Views.Parametres.ListeParametresVue"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:erpWpf.Wpf.ViewModels.Parametres"
+             xmlns:controles="clr-namespace:erpWpf.Wpf.Controles"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance vm:ListeParametresViewModel}">
+    <UserControl.Resources>
+        <controles:ProxyLiaison x:Key="Ecran" Donnees="{Binding}" />
+    </UserControl.Resources>
+    <DockPanel>
+        <controles:EnTetePage DockPanel.Dock="Top" Titre="{Binding Titre}">
+            <Button Style="{StaticResource BoutonPrincipal}" Command="{Binding CreerCommand}"
+                    Visibility="{Binding PeutModifier, Converter={StaticResource BooleenVersVisibilite}}" AutomationProperties.Name="Nouveau paramètre">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource Icone}" Text="{Binding Source=ajouter, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,6,0" />
+                    <TextBlock Text="Nouveau paramètre" />
+                </StackPanel>
+            </Button>
+        </controles:EnTetePage>
+        <TextBlock DockPanel.Dock="Top" Style="{StaticResource TexteSecondaire}" Margin="0,0,0,12"
+                   Text="Les clés suivent la notation de configuration Section:Cle (ex. Smtp:Hote) et surchargent les valeurs d'appsettings.json. Elles sont prises en compte immédiatement." />
+
+        <DataGrid ItemsSource="{Binding Parametres}" AutomationProperties.Name="Liste des paramètres">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Clé" Binding="{Binding Cle}" Width="*" FontFamily="Consolas" />
+                <DataGridTextColumn Header="Valeur" Binding="{Binding Valeur}" Width="*" />
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="2*" />
+                <DataGridTemplateColumn Header="Modifié" Width="200" SortMemberPath="DateModification">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <Run Text="{Binding DateModification, Converter={StaticResource UtcVersLocal}, Mode=OneWay}" />
+                                <Run Text="{Binding ModifiePar, Mode=OneWay}" Foreground="{StaticResource PinceauTexteSecondaire}" />
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Actions" Width="56" CanUserSort="False"
+                                        Visibility="{Binding Donnees.PeutModifier, Source={StaticResource Ecran}, Converter={StaticResource BooleenVersVisibilite}}">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Style="{StaticResource BoutonIcone}" Background="Transparent" BorderThickness="0" Padding="4" MinHeight="24"
+                                    Content="{Binding Source=modifier, Converter={StaticResource NomIconeVersGlyphe}}"
+                                    Command="{Binding Donnees.ModifierCommand, Source={StaticResource Ecran}}" CommandParameter="{Binding}"
+                                    ToolTip="Modifier" AutomationProperties.Name="{Binding Cle, StringFormat='Modifier {0}'}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

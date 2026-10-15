@@ -1,6 +1,6 @@
 ---
 name: preparer-pr
-description: Prépare la branche courante d'erpWeb pour une Pull Request (mise à jour depuis main, vérification des commits et migrations, build, format, tests, revue de conception) puis ouvre la PR avec gh ou fournit les commandes à exécuter. À utiliser quand une évolution est terminée.
+description: Prépare la branche courante d'erpWpf pour une Pull Request (mise à jour depuis main, vérification des commits et migrations, build, format, tests, revue de conception) puis ouvre la PR avec gh ou fournit les commandes à exécuter. À utiliser quand une évolution est terminée.
 ---
 
 # Préparer une Pull Request
@@ -16,9 +16,10 @@ description: Prépare la branche courante d'erpWeb pour une Pull Request (mise �
 ## 2. Vérifications (identiques à la CI)
 
 ```bash
-dotnet build erpWeb.sln
-dotnet format erpWeb.sln --verify-no-changes
-dotnet test erpWeb.sln
+dotnet build erpWpf.sln
+dotnet format erpWpf.sln --verify-no-changes
+dotnet test erpWpf.sln
+dotnet ef migrations has-pending-model-changes -p src/erpWeb.Infrastructure -s src/erpWpf.Wpf
 ```
 
 Toute erreur est corrigée avant de continuer (commit `fix` ou `refactor` dédié).

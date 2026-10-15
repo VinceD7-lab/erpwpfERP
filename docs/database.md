@@ -1,6 +1,6 @@
 # Base de données
 
-Récapitulatif du schéma SQL Server (LocalDB en développement) géré par EF Core. Source de vérité : les configurations de [src/erpWeb.Infrastructure/Donnees/Configurations/](../src/erpWeb.Infrastructure/Donnees/Configurations/) et les migrations de [src/erpWeb.Infrastructure/Donnees/Migrations/](../src/erpWeb.Infrastructure/Donnees/Migrations/). Les tests unitaires utilisent SQLite en mémoire (les contraintes CHECK y sont retirées).
+Récapitulatif du schéma SQL Server (LocalDB en développement) géré par EF Core, auquel les postes clients WPF se connectent directement. Source de vérité : les configurations de [src/erpWeb.Infrastructure/Donnees/Configurations/](../src/erpWeb.Infrastructure/Donnees/Configurations/) et les migrations de [src/erpWeb.Infrastructure/Donnees/Migrations/](../src/erpWeb.Infrastructure/Donnees/Migrations/). Les tests unitaires utilisent SQLite en mémoire (les contraintes CHECK y sont retirées).
 
 ## Conventions
 
@@ -169,7 +169,7 @@ Pas d'`EntiteAuditable` : journal en ajout seul alimenté par l'intercepteur d'a
 | AnciennesValeurs | nvarchar(max) | oui | JSON |
 | NouvellesValeurs | nvarchar(max) | oui | JSON |
 
-## Identité (ASP.NET Core Identity)
+## Identité (stores ASP.NET Core Identity)
 
 `AppDbContext` hérite d'`IdentityDbContext<Utilisateur>` : tables standard `AspNetUsers`, `AspNetRoles`, `AspNetUserRoles`, `AspNetUserClaims`, `AspNetRoleClaims`, `AspNetUserLogins`, `AspNetUserTokens`.
 
@@ -194,3 +194,11 @@ Les permissions (`Clients.Lire`, `PlanningAnalyses.Gerer`, etc.) sont portées p
 | `AjoutPlanningAnalyses` | `PlanningAnalyses` |
 
 Règles : une migration par Pull Request au maximum ; ne jamais modifier une migration déjà fusionnée dans `main`.
+
+## Connexion des postes clients
+
+L'application WPF ouvre une connexion SQL Server directe depuis chaque poste (`ConnectionStrings:ParDefaut`). Les permissions de l'application filtrent les écrans, mais **le compte SQL est la frontière de sécurité réelle** :
+
+- comptes des postes (de préférence un groupe Windows en sécurité intégrée) limités à `db_datareader` et `db_datawriter`, sans `db_owner` ni droit DDL ;
+- migrations appliquées par un administrateur avec `efbundle.exe` (voir README, « Déploiement ») ;
+- chiffrement de la connexion (`Encrypt=True`) ; `TrustServerCertificate=True` seulement tant que le serveur n'a pas de certificat reconnu par les postes.

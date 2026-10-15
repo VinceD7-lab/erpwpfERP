@@ -1,0 +1,83 @@
+<!--
+    Rendu générique des widgets par type de données (ex-vues Shared/Components/Widget/Donnees*.cshtml) :
+    un nouveau widget qui réutilise un type existant n'ajoute aucune vue.
+-->
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:tdb="clr-namespace:erpWeb.Core.TableauDeBord;assembly=erpWeb.Core"
+                    xmlns:vues="clr-namespace:erpWpf.Wpf.Views.TableauDeBord"
+                    xmlns:convertisseurs="clr-namespace:erpWpf.Wpf.Ressources.Convertisseurs"
+                    xmlns:oxy="http://oxyplot.org/wpf">
+
+    <convertisseurs:DonneesGraphiqueVersModele x:Key="DonneesGraphiqueVersModele" />
+
+    <DataTemplate DataType="{x:Type tdb:DonneesIndicateur}">
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="{Binding Valeur}" FontSize="36" FontWeight="SemiBold" Foreground="{StaticResource PinceauPrimaire}" />
+            <TextBlock Text="{Binding Libelle}" FontSize="14" />
+            <TextBlock Text="{Binding Detail}" Style="{StaticResource TexteSecondaire}" Margin="0,4,0,0" />
+        </StackPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type tdb:DonneesGraphique}">
+        <oxy:PlotView Model="{Binding Converter={StaticResource DonneesGraphiqueVersModele}}" Height="240" Background="Transparent" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type tdb:DonneesListe}">
+        <Grid>
+            <TextBlock Text="{Binding MessageVide}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource TexteSecondaire}">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Elements.Count}" Value="0">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+            <ItemsControl ItemsSource="{Binding Elements}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type tdb:ElementListe}">
+                        <Border BorderBrush="{StaticResource PinceauBordure}" BorderThickness="0,0,0,1" Padding="0,6">
+                            <StackPanel>
+                                <Button Style="{StaticResource BoutonLien}" HorizontalAlignment="Left" Padding="0"
+                                        Content="{Binding Libelle}" CommandParameter="{Binding Destination}"
+                                        Command="{Binding DataContext.NaviguerCommand, RelativeSource={RelativeSource AncestorType=vues:WidgetVue}}"
+                                        Visibility="{Binding Destination, Converter={StaticResource PresenceVersVisibilite}}" />
+                                <TextBlock Text="{Binding Libelle}" FontWeight="SemiBold"
+                                           Visibility="{Binding Destination, Converter={StaticResource PresenceVersVisibilite}, ConverterParameter=Inverse}" />
+                                <TextBlock Text="{Binding Detail}" Style="{StaticResource TexteSecondaire}" FontSize="11" />
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type tdb:DonneesRaccourcis}">
+        <ItemsControl ItemsSource="{Binding Raccourcis}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type tdb:Raccourci}">
+                    <Button Margin="0,0,0,6" HorizontalContentAlignment="Left" CommandParameter="{Binding Destination}"
+                            Command="{Binding DataContext.NaviguerCommand, RelativeSource={RelativeSource AncestorType=vues:WidgetVue}}"
+                            AutomationProperties.Name="{Binding Libelle}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource BoutonBase}">
+                                <Setter Property="Foreground" Value="{StaticResource PinceauPrimaire}" />
+                                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                            </Style>
+                        </Button.Style>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                            <TextBlock Style="{StaticResource Icone}" Text="{Binding Icone, Converter={StaticResource NomIconeVersGlyphe}}" Margin="0,0,8,0" />
+                            <TextBlock Text="{Binding Libelle}" />
+                        </StackPanel>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </DataTemplate>
+
+</ResourceDictionary>

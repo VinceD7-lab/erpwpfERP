@@ -23,8 +23,15 @@
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageVersion Include="MailKit" Version="4.18.0" />
+    <!-- MimeKit (via MailKit) tire la version 10.0.0, vulnérable (GHSA-2fmv-rv2c-59x7, GHSA-846f-f764-76mx) : version corrigée imposée -->
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageVersion Include="ClosedXML" Version="0.105.1" />
-    <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="3.0.114" />
+  </ItemGroup>
+
+  <ItemGroup Label="Presentation WPF">
+    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
+    <PackageVersion Include="OxyPlot.Wpf" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup Label="Tests">
@@ -35,7 +42,6 @@
     <PackageVersion Include="Moq" Version="4.20.72" />
     <PackageVersion Include="Bogus" Version="35.6.5" />
     <PackageVersion Include="NetArchTest.Rules" Version="1.3.2" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.12" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="10.10.0" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 ---
 name: demarrer-branche
-description: Démarre une évolution selon le GitHub Flow d'erpWeb : met main à jour et crée une branche <type>/<description> correctement nommée. À utiliser avant tout développement, ou dès que Claude constate qu'il travaille sur main.
+description: Démarre une évolution selon le GitHub Flow d'erpWpf : met main à jour et crée une branche <type>/<description> correctement nommée. À utiliser avant tout développement, ou dès que Claude constate qu'il travaille sur main.
 ---
 
 # Démarrer une branche (GitHub Flow)

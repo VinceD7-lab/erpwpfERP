@@ -7,13 +7,14 @@ $chemin = [string] $donnees.tool_input.file_path
 if ($chemin -notmatch '\.cs$' -or -not (Test-Path -LiteralPath $chemin)) { exit 0 }
 
 $normalise = $chemin -replace '\\', '/'
-if ($normalise -notmatch '/src/erpWeb\.(Core|Infrastructure|Web)/') { exit 0 }
-$couche = $Matches[1]
+if ($normalise -notmatch '/src/(erpWeb\.Core|erpWeb\.Infrastructure|erpWpf\.Wpf)/') { exit 0 }
+$couche = ($Matches[1] -split '\.')[1]
 if ($normalise -match '/Migrations/') { exit 0 }
 
 $nomFichier = Split-Path -Leaf $chemin
-$estCompositionRoot = $nomFichier -in @('Program.cs', 'DependencyInjection.cs')
-$estControleur = $normalise -match '/Controllers/'
+$estCompositionRoot = ($nomFichier -in @('DependencyInjection.cs', 'App.xaml.cs')) -or ($couche -eq 'Wpf' -and $normalise -match '/Hote/')
+$estViewModel = $couche -eq 'Wpf' -and $normalise -match '/ViewModels/'
+$estCodeBehind = $nomFichier -like '*.xaml.cs'
 
 $regles = [System.Collections.Generic.List[object]]::new()
 function Ajouter-Regle([string] $motif, [string] $message, [bool] $active = $true) {
@@ -22,14 +23,20 @@ function Ajouter-Regle([string] $motif, [string] $message, [bool] $active = $tru
 
 Ajouter-Regle 'DateTime\.(Now|UtcNow|Today)\b' 'DateTime.Now/UtcNow/Today interdit : injecter TimeProvider (Untestability).'
 Ajouter-Regle 'new\s+AppDbContext\s*\(' 'Instanciation directe de AppDbContext : passer par l''injection de dependances (Tight coupling).'
-Ajouter-Regle '\bIServiceProvider\b' 'IServiceProvider hors composition root : Service Locator interdit, injecter par constructeur (Singleton/Tight coupling).' (-not $estCompositionRoot)
+Ajouter-Regle '\b(IServiceProvider|IServiceScopeFactory)\b' 'IServiceProvider/IServiceScopeFactory hors composition root (App.xaml.cs, DependencyInjection.cs, Hote/) : Service Locator interdit, injecter par constructeur ou passer par IExecuteurOperations.' (-not $estCompositionRoot)
 Ajouter-Regle '\b(private|internal|public|protected)\s+static\s+(?!readonly\b|extern\b|class\b|partial\b|async\b|void\b|implicit\b|explicit\b)[\w<>\[\],\.\?]+\s+\w+\s*(=(?!>)|;)' 'Champ statique modifiable : etat statique interdit (Singleton).'
 Ajouter-Regle '\bstatic\s+[\w<>\[\],\.\?]+\s+\w+\s*\{\s*get;\s*set;' 'Propriete statique modifiable : etat statique interdit (Singleton).'
-Ajouter-Regle '^\s*using\s+erpWeb\.(Infrastructure|Web)\b' 'Core ne doit dependre ni d''Infrastructure ni de Web (Dependency Inversion).' ($couche -eq 'Core')
+Ajouter-Regle '\basync\s+void\b' 'async void interdit hors gestionnaire d''evenement XAML (*.xaml.cs) : retourner Task ou utiliser une commande asynchrone.' (-not $estCodeBehind)
+Ajouter-Regle '^\s*using\s+(erpWeb\.Infrastructure|erpWpf)\b' 'Core ne doit dependre ni d''Infrastructure ni de la presentation (Dependency Inversion).' ($couche -eq 'Core')
+Ajouter-Regle '^\s*using\s+System\.Windows\b' 'Type WPF dans Core : Core reste independant de la presentation.' ($couche -eq 'Core')
 Ajouter-Regle '^\s*using\s+(Microsoft\.Data\.SqlClient|Microsoft\.Data\.Sqlite|MailKit|MimeKit|ClosedXML)\b' 'Bibliotheque d''infrastructure dans Core : definir une interface dans Core, l''implementer dans Infrastructure.' ($couche -eq 'Core')
 Ajouter-Regle '\b(File|Directory)\.\w+\s*\(' 'Acces direct au systeme de fichiers dans Core : passer par une interface (ex. IStockageFichiers).' ($couche -eq 'Core')
 Ajouter-Regle '\bAppDbContext\b' 'Dependance a AppDbContext hors Infrastructure : utiliser IAppDbContext.' ($couche -ne 'Infrastructure' -and -not $estCompositionRoot)
-Ajouter-Regle '\bIAppDbContext\b' 'Acces aux donnees dans un controleur : deleguer a un service de Core.' $estControleur
+Ajouter-Regle '^\s*using\s+erpWeb\.Infrastructure\b' 'Infrastructure n''est reference que dans la composition root (App.xaml.cs, Hote/).' ($couche -eq 'Wpf' -and -not $estCompositionRoot)
+Ajouter-Regle '\bIAppDbContext\b' 'Acces aux donnees dans un ViewModel : deleguer a un service de Core via IExecuteurOperations.' $estViewModel
+Ajouter-Regle '\bMessageBox\b' 'MessageBox dans un ViewModel : passer par IServiceDialogues (testabilite).' $estViewModel
+Ajouter-Regle '^\s*using\s+(System\.Windows\.(Controls|Media|Documents|Shapes)|Microsoft\.Win32)\b' 'Type d''interface graphique dans un ViewModel : passer par un service (IServiceFichiers, IServiceImpression...) ou un convertisseur.' $estViewModel
+Ajouter-Regle '\.(Result|Wait\(\))\s*[;\)\.]' 'Attente bloquante (.Result / .Wait()) : utiliser await pour ne pas figer le thread UI.' ($couche -eq 'Wpf')
 
 $lignes = @(Get-Content -LiteralPath $chemin -Encoding UTF8)
 $violations = [System.Collections.Generic.List[string]]::new()

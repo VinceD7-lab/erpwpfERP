@@ -6,12 +6,12 @@ namespace erpWeb.Core.TableauDeBord;
 /// </summary>
 public interface IWidgetTableauDeBord
 {
-    /// <summary>Identifiant technique en kebab-case, utilisé dans l'URL de rafraîchissement.</summary>
+    /// <summary>Identifiant technique unique en kebab-case.</summary>
     string Nom { get; }
 
     string Titre { get; }
 
-    /// <summary>Classe Bootstrap Icons (ex. bi-people).</summary>
+    /// <summary>Nom d'icône neutre (voir <see cref="Icones"/>).</summary>
     string Icone { get; }
 
     int Ordre { get; }

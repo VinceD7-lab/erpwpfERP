@@ -10,7 +10,7 @@ $racine = git -C $repertoire rev-parse --show-toplevel 2>$null
 if (-not $racine) { exit 0 }
 Set-Location $racine
 
-$modifies = git status --porcelain -- '*.cs' '*.xaml' '*.cshtml' '*.csproj' '*.props' 2>$null
+$modifies = git status --porcelain -- '*.cs' '*.xaml' '*.csproj' '*.props' 2>$null
 if (-not $modifies) { exit 0 }
 
 $sortieBuild = dotnet build erpWpf.sln -nologo -v q 2>&1

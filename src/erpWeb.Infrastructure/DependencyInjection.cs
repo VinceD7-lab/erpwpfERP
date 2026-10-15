@@ -17,7 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace erpWeb.Infrastructure;
 
-/// <summary>Composition root de la couche Infrastructure, appelée uniquement depuis Program.cs.</summary>
+/// <summary>Composition root de la couche Infrastructure, appelée uniquement depuis la composition root de la présentation (erpWpf.Wpf/Hote/ConstructionHote).</summary>
 public static class DependencyInjection
 {
     public const string NomChaineConnexion = "ParDefaut";
@@ -57,6 +57,13 @@ public static class DependencyInjection
         => identite
             .AddEntityFrameworkStores<AppDbContext>()
             .AddErrorDescriber<DescripteurErreursIdentiteFrancais>();
+
+    /// <summary>
+    /// Fournisseur de jetons par défaut (réinitialisation de mot de passe) sans Data Protection d'ASP.NET Core :
+    /// jeton TOTP lié au tampon de sécurité, suffisant pour une réinitialisation générée et consommée immédiatement.
+    /// </summary>
+    public static IdentityBuilder AddJetonsIdentite(this IdentityBuilder identite)
+        => identite.AddTokenProvider<EmailTokenProvider<Utilisateur>>(TokenOptions.DefaultProvider);
 
     /// <summary>Ajoute la table Parametres comme dernière source : elle surcharge les fichiers de configuration.</summary>
     public static ConfigurationManager AddParametresBaseDeDonnees(this ConfigurationManager configuration)
