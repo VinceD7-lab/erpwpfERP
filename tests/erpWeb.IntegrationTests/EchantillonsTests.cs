@@ -1,3 +1,4 @@
+using System.Globalization;
 using erpWeb.Core.Communs;
 using erpWeb.Core.Echantillons;
 using erpWeb.Core.Tournees;
@@ -35,6 +36,8 @@ public sealed class EchantillonsTests : IClassFixture<HoteApplication>
             await contexte.SaveChangesAsync();
         }
 
+        // L'application force fr-FR au démarrage (App.xaml.cs) ; les agents de CI sont en en-US.
+        CultureInfo.CurrentCulture = new CultureInfo("fr-FR");
         await _hote.ConnecterAdministrateurAsync();
         var grille = await OuvrirAsync();
 
