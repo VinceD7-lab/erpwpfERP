@@ -23,6 +23,8 @@
     <PackageVersion Include="FluentValidation" Version="12.1.1" />
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageVersion Include="MailKit" Version="4.18.0" />
+    <!-- MimeKit (via MailKit) tire la version 10.0.0, vulnérable (GHSA-2fmv-rv2c-59x7, GHSA-846f-f764-76mx) : version corrigée imposée -->
+    <PackageVersion Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
     <PackageVersion Include="ClosedXML" Version="0.105.1" />
   </ItemGroup>
 
